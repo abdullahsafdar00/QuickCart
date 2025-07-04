@@ -17,8 +17,6 @@ const Navbar = () => {
         onClick={() => router.push('/')} >
           <span className="text-[#EA580C]">HM</span>Electronics
         </h1>
-        
-      
       <div className="flex items-center gap-4 lg:gap-8 max-md:hidden">
         <Link href="/" className="hover:text-gray-900 transition">
           Home
@@ -32,9 +30,7 @@ const Navbar = () => {
         <Link href="/" className="hover:text-gray-900 transition">
           Contact
         </Link>
-
-
-
+         {isSeller ? <><button className=" h-10 w-[160px] border border-gray-200 rounded-full hover:bg-gray-50"><a href="/seller">Seller DashBoard</a></button></> : <></> }
       </div>
 
       <ul className="hidden md:flex items-center gap-4 ">
@@ -66,7 +62,7 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center md:hidden gap-3">
-      
+      {isSeller ? <><button className="bg-[#E6E9F2] h-10 w-[70px] rounded-full hover:bg-slate-300"><a href="/seller">Seller</a></button></> : <></> }
         { user ?
           <>
           <UserButton>
