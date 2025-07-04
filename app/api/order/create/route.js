@@ -16,9 +16,9 @@ export async function POST(request) {
 
         // calculate amount using items
 
-        const amount = await items.reduce(async, (acc, item)=>{
+        const amount = await items.reduce(async (acc, item)=>{
             const product = Product.findById(item.product);
-            return acc + product.offerPrice * item.quantity
+            return await acc + product.offerPrice * item.quantity
         }, 0)
 
         await inngest.send({
@@ -27,8 +27,8 @@ export async function POST(request) {
                 userId,
                 address,
                 items,
-                amount,
-                date: Date.now()
+                amount: amount + Math.floor(amount * 0.02),
+                date: Date.now(),
             }
         })
         // clear user cart
