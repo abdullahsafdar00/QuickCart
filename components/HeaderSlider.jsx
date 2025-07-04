@@ -31,29 +31,48 @@ const HeaderSlider = () => {
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  const totalSlides = sliderData.length;
+  const extendedSlides = [...sliderData, sliderData[0]]; // Clone first slide
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % sliderData.length);
-    }, 3000);
+      setCurrentSlide((prev) => prev + 1);
+    }, 4000);
+
     return () => clearInterval(interval);
-  }, [sliderData.length]);
+  }, []);
+
+  useEffect(() => {
+    if (currentSlide === totalSlides) {
+      const timeout = setTimeout(() => {
+        setIsAnimating(false);
+        setCurrentSlide(0);
+      }, 700); // match transition duration
+
+      return () => clearTimeout(timeout);
+    } else {
+      setIsAnimating(true);
+    }
+  }, [currentSlide, totalSlides]);
 
   const handleSlideChange = (index) => {
+    setIsAnimating(true);
     setCurrentSlide(index);
   };
 
   return (
     <div className="overflow-hidden relative w-full">
       <div
-        className="flex transition-transform duration-700 ease-in-out"
+        className={`flex ${isAnimating ? "transition-transform duration-700 ease-in-out" : ""}`}
         style={{
           transform: `translateX(-${currentSlide * 100}%)`,
         }}
       >
-        {sliderData.map((slide, index) => (
+        {extendedSlides.map((slide, index) => (
           <div
-            key={slide.id}
+            key={index}
             className="flex flex-col-reverse md:flex-row items-center justify-between bg-[#E6E9F2] py-8 md:px-14 px-5 mt-6 rounded-xl min-w-full"
           >
             <div className="md:pl-8 mt-10 md:mt-0">
@@ -88,7 +107,7 @@ const HeaderSlider = () => {
             key={index}
             onClick={() => handleSlideChange(index)}
             className={`h-2 w-2 rounded-full cursor-pointer ${
-              currentSlide === index ? "bg-orange-600" : "bg-gray-500/30"
+              currentSlide % totalSlides === index ? "bg-orange-600" : "bg-gray-500/30"
             }`}
           ></div>
         ))}
