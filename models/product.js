@@ -9,6 +9,8 @@
     image: {type: Array, required:true},
     category: {type: String, required:true},
     date: {type: Date, required:true},
+    inStock: { type: Boolean, default: true }
+
  })
 
  const Product = mongoose.models.product || mongoose.model('product', productSchema)

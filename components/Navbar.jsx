@@ -40,17 +40,12 @@ const Navbar = () => {
         <Link href="/all-products" className="hover:text-gray-900 transition">
           Shop
         </Link>
-        <Link href="/" className="hover:text-gray-900 transition">
+        <Link href="/about-us" className="hover:text-gray-900 transition">
           About Us
         </Link>
-        <Link href="/" className="hover:text-gray-900 transition">
+        <Link href="/contact-us" className="hover:text-gray-900 transition">
           Contact
         </Link>
-        {isSeller && (
-          <button className="h-10 w-[160px] border border-gray-200 rounded-full hover:bg-gray-50">
-            <a href="/seller">Seller DashBoard</a>
-          </button>
-        )}
       </div>
 
       <ul className="hidden md:flex items-center gap-4 ">
@@ -85,11 +80,7 @@ const Navbar = () => {
       </ul>
 
       <div className="flex items-center md:hidden gap-3">
-        {isSeller && (
-          <button className="bg-[#E6E9F2] h-10 w-[70px] rounded-full hover:bg-slate-300">
-            <a href="/seller">Seller</a>
-          </button>
-        )}
+
         {user ? (
           <UserButton>
             <UserButton.MenuItems>
