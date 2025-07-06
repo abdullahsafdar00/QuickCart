@@ -1,6 +1,7 @@
 import React from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const products = [
   {
@@ -25,7 +26,9 @@ const products = [
 
 const FeaturedProduct = () => {
   return (
-    <div className="mt-14">
+    <motion.div  initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }} className="mt-14">
       <div className="flex flex-col items-center">
         <p className="text-3xl font-medium">Featured Products</p>
         <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
@@ -45,13 +48,23 @@ const FeaturedProduct = () => {
                 {description}
               </p>
               <button className="flex items-center gap-1.5 bg-orange-600 px-4 py-2 rounded">
-                Buy now <Image className="h-3 w-3" src={assets.redirect_icon} alt="Redirect Icon" />
+                Buy now 
+                <motion.div animate={{ scale: [1, 1.5, 1] }}
+          transition={{
+            duration: 1.2,
+            repeat: Infinity,
+            repeatType: 'loop',
+            ease: 'easeInOut',
+          }}>
+              <Image className="h-3 w-3" src={assets.redirect_icon} alt="Redirect Icon" />
+                </motion.div>
+                
               </button>
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

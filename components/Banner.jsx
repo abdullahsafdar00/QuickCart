@@ -2,10 +2,13 @@
 import React from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const Banner = () => {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between md:pl-20 py-14 md:py-0 bg-[#E6E9F2] my-16 rounded-xl overflow-hidden">
+    <motion.div  initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }} className="flex flex-col md:flex-row items-center justify-between md:pl-20 py-14 md:py-0 bg-[#E6E9F2] my-16 rounded-xl overflow-hidden">
       <Image
         className="max-w-56"
         src={assets.jbl_soundbox_image}
@@ -18,10 +21,17 @@ const Banner = () => {
         <p className="max-w-[343px] font-medium text-gray-800/60">
           From immersive sound to precise controls—everything you need to win
         </p>
-        <button className="group flex items-center justify-center gap-1 px-12 py-2.5 bg-orange-600 rounded text-white">
-          Buy now
+        <motion.button animate={{
+    rotate: [0, -10, 5, -10, 5, -5, 5, 0],
+    transition: {
+      duration: 1.2,
+      repeat: Infinity,
+      ease: "easeInOut",
+    },
+  }} className="group flex items-center justify-center gap-1 px-12 py-2.5 bg-orange-600 rounded text-white">
+          <p>Buy Now</p>
           <Image className="group-hover:translate-x-1 transition" src={assets.arrow_icon_white} alt="arrow_icon_white" />
-        </button>
+        </motion.button>
       </div>
       <Image
         className="hidden md:block max-w-80"
@@ -33,7 +43,7 @@ const Banner = () => {
         src={assets.sm_controller_image}
         alt="sm_controller_image"
       />
-    </div>
+    </motion.div>
   );
 };
 

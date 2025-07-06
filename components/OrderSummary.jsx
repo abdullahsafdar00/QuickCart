@@ -4,6 +4,7 @@ import { useAppContext } from "@/context/AppContext";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 const OrderSummary = () => {
 
@@ -76,7 +77,9 @@ const OrderSummary = () => {
   }, [user])
 
   return (
-    <div className="w-full md:w-96 bg-gray-500/5 p-5">
+    <motion.div  initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }} className="w-full md:w-96 bg-gray-500/5 p-5">
       <h2 className="text-xl md:text-2xl font-medium text-gray-700">
         Order Summary
       </h2>
@@ -166,7 +169,7 @@ const OrderSummary = () => {
       <button onClick={createOrder} className="w-full bg-orange-600 text-white py-3 mt-5 hover:bg-orange-700">
         Place Order
       </button>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,11 +1,16 @@
+"use client"
+
 import React from 'react'
-import { assets } from '../../assets/assets'
-import Image from 'next/image'
 import { useAppContext } from '@/context/AppContext'
+import { useClerk, UserButton } from "@clerk/nextjs";
+import { assets } from '@/assets/assets';
+import Image from 'next/image';
 
 const Navbar = () => {
 
-  const { router } = useAppContext()
+
+  const { router, user } = useAppContext()
+   const { openSignIn } = useClerk();
 
   return (
     <div className='flex items-center px-4 md:px-8 py-3 justify-between border-b'>
@@ -13,7 +18,22 @@ const Navbar = () => {
         onClick={() => router.push('/')} >
           <span className="text-[#EA580C]">HM</span>Electronics
         </h1>
-      <button className='bg-gray-600 text-white px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm'>Logout</button>
+         {user ? (
+                  <li>
+                    <UserButton>
+                    </UserButton>
+                  </li>
+                ) : (
+                  <li>
+                    <button
+                      onClick={openSignIn}
+                      className="flex items-center gap-2 hover:text-gray-900 transition"
+                    >
+                      <Image src={assets.user_icon} alt="user icon" />
+                      Account
+                    </button>
+                  </li>
+                )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { assets } from "@/assets/assets";
+import { useUser } from '@clerk/nextjs';
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/seller/Footer";
@@ -12,6 +13,8 @@ const ProductList = () => {
   const { router, getToken, user } = useAppContext();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { isLoaded } = useUser();
+  const [isAuthorized, setIsAuthorized] = useState(false);
 
   const fetchSellerProduct = async () => {
     try {
@@ -79,6 +82,16 @@ const ProductList = () => {
     if (user) {
       fetchSellerProduct();
     }
+      if (isLoaded) {
+      const role = user?.publicMetadata?.role;
+      if (role === 'admin') {
+        setIsAuthorized(true);
+      } else {
+        router.replace('/access-denied'); // Optional: create this page
+      }
+    }
+
+
   }, [user]);
 
   return (
