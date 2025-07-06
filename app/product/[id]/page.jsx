@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import Loading from "@/components/Loading";
 import { useAppContext } from "@/context/AppContext";
+import { motion } from "framer-motion";
 import React from "react";
 
 const Product = () => {
@@ -30,7 +31,9 @@ const Product = () => {
 
     return productData ? (<>
         <Navbar />
-        <div className="px-6 md:px-16 lg:px-32 pt-14 space-y-10">
+        <motion.div  initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }} className="px-6 md:px-16 lg:px-32 pt-14 space-y-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
                 <div className="px-5 lg:px-16 xl:px-20">
                     <div className="rounded-lg overflow-hidden bg-gray-500/10 mb-4">
@@ -134,7 +137,7 @@ const Product = () => {
                     See more
                 </button>
             </div>
-        </div>
+        </motion.div>
         <Footer />
     </>
     ) : <Loading />

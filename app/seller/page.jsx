@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
+import { useUser } from '@clerk/nextjs';
 import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 
 
 const AddProduct = () => {
-
-  const { getToken } = useAppContext();
+  const { getToken, user, router } = useAppContext();
 
   const [files, setFiles] = useState([]);
   const [name, setName] = useState('');
@@ -18,6 +18,8 @@ const AddProduct = () => {
   const [category, setCategory] = useState('Earphone');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
+   const { isLoaded } = useUser();
+    const [isAuthorized, setIsAuthorized] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,6 +58,21 @@ const AddProduct = () => {
 
   };
 
+ function isAdmin(){
+    if (isLoaded) {
+      const role = user?.publicMetadata?.role;
+      if (role === 'seller') {
+        setIsAuthorized(true);
+      } else {
+        router.replace('/access-denied'); // Optional: create this page
+      }
+    }
+ }
+
+ useEffect(() => {
+  isAdmin();
+ })
+ 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
       <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">

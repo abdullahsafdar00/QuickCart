@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import validator from "validator";
+import { motion } from "framer-motion";
 
 const NewsLetter = () => {
 
@@ -51,7 +52,9 @@ const NewsLetter = () => {
 };
 
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-2 pt-8 pb-14">
+    <motion.div  initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }} className="flex flex-col items-center justify-center text-center space-y-2 pt-8 pb-14">
       <h1 className="md:text-4xl text-2xl font-medium">
         Subscribe now & get 20% off
       </h1>
@@ -95,7 +98,7 @@ const NewsLetter = () => {
       {status === "error" && (
         <p className="text-red-500 pt-2">Something went wrong. Try again.</p>
       )}
-    </div>
+    </motion.div>
   );
 };
 
