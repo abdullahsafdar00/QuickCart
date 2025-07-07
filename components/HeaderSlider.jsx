@@ -78,7 +78,7 @@ const HeaderSlider = () => {
           >
             <div className="md:pl-8 mt-10 md:mt-0">
               <p className="md:text-base text-orange-600 pb-1">{slide.offer}</p>
-              <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-2xl font-semibold">
+              <h1 className="max-w-lg md:text-[40px] md:leading-[48px] text-3xl font-medium">
                 {slide.title}
               </h1>
               <div className="flex items-center mt-4 md:mt-6 ">
@@ -89,7 +89,7 @@ const HeaderSlider = () => {
                   {slide.buttonText2}
                   <motion.div  animate={{ scale: [1, 1.3, 1] }}
           transition={{
-            duration: 1.2,
+            duration: 0.6,
             repeat: Infinity,
             repeatType: 'loop',
             ease: 'easeInOut',

@@ -41,9 +41,7 @@ const ContactUs = () => {
     <>
       <Navbar />
 
-      <motion.section  initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }} className="relative bg-white py-16 px-4 md:px-20">
+      <section className="relative bg-white py-16 px-4 md:px-20">
         {/* Gradient blur background */}
         <div className="absolute -top-20 left-0 w-[400px] h-[400px] bg-orange-100 opacity-30 rounded-full blur-[120px] -z-10" />
         <div className="absolute -bottom-16 right-0 w-[400px] h-[400px] bg-orange-200 opacity-40 rounded-full blur-[100px] -z-10" />
@@ -170,7 +168,7 @@ const ContactUs = () => {
             <path d="M20.52 3.48A11.94 11.94 0 0012 0C5.37 0 0 5.37 0 12c0 2.11.55 4.15 1.61 5.96L0 24l6.28-1.65a11.94 11.94 0 005.72 1.46c6.63 0 12-5.37 12-12 0-3.19-1.24-6.19-3.48-8.52zM12 21.75a9.76 9.76 0 01-4.94-1.35l-.35-.2-3.73.99 1-3.65-.23-.38a9.76 9.76 0 0115.5-11.42A9.76 9.76 0 0121.75 12c0 5.37-4.38 9.75-9.75 9.75zm5.4-7.95c-.3-.15-1.76-.86-2.03-.96s-.47-.15-.67.15c-.2.3-.76.96-.93 1.16-.17.2-.35.23-.65.08s-1.27-.47-2.42-1.5a9.18 9.18 0 01-1.7-2.12c-.18-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.38 0-.53-.05-.15-.66-1.6-.9-2.2-.24-.6-.5-.52-.67-.53H8.1c-.15 0-.4.06-.6.3s-.8.78-.8 1.9.82 2.2.93 2.35c.12.15 1.6 2.5 3.88 3.5 2.28 1 2.28.67 2.7.63.43-.04 1.4-.57 1.6-1.12.2-.56.2-1.04.15-1.15-.05-.1-.25-.16-.55-.3z" />
           </svg>
         </a>
-      </motion.section>
+      </section>
 
       <Footer />
     </>

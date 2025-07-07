@@ -33,15 +33,15 @@ const Footer = () => {
   };
 
   return (
-    <motion.footer  initial={{ opacity: 0, y: 50 }}
+    <footer className="bg-white text-gray-600 border-t border-gray-200">
+      <motion.div initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }} className="bg-white text-gray-600 border-t border-gray-200">
-      <div className="flex flex-col md:flex-row justify-between gap-12 px-6 md:px-16 lg:px-32 py-14">
+          transition={{ duration: 0.6 }} className="flex flex-col md:flex-row justify-between gap-12 px-6 md:px-16 lg:px-32 py-14">
         {/* Brand */}
         <div className="w-full md:w-1/3 space-y-5">
           <h1
             onClick={() => router.push("/")}
-            className="cursor-pointer text-3xl font-bold text-gray-800"
+            className="cursor-pointer text-3xl text-gray-800"
           >
             <span className="text-[#EA580C]">HM</span>Electronics
           </h1>
@@ -93,13 +93,13 @@ const Footer = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Bottom */}
       <div className="border-t border-gray-200 py-4 text-center text-xs md:text-sm text-gray-400">
         © 2025 <span className="font-medium text-gray-500">HMElectronics</span>. All rights reserved.
       </div>
-    </motion.footer>
+    </footer>
   );
 };
 

@@ -20,7 +20,7 @@ const AllProducts = () => {
       >
         {/* Heading */}
         <div className="flex flex-col items-start w-full">
-          <h1 className="text-3xl font-semibold text-gray-800">All Products</h1>
+          <h1 className="text-3xl text-gray-800">All <span className="text-[#EA580C]"> Products</span></h1>
           <div className="w-16 h-1 mt-2 bg-orange-600 rounded-full" />
         </div>
 
