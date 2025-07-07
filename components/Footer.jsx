@@ -97,7 +97,7 @@ const Footer = () => {
 
       {/* Bottom */}
       <div className="border-t border-gray-200 py-4 text-center text-xs md:text-sm text-gray-400">
-        © 2025 <span className="font-medium text-gray-500">HMElectronics</span>. All rights reserved.
+        © 2025 <span className="font-medium text-gray-500"><span className="text-[#EA580C]">HM</span>Electronics</span>. All rights reserved.
       </div>
     </footer>
   );

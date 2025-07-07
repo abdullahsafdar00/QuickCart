@@ -1,4 +1,4 @@
-'use client'
+
 import React from "react";
 import connectDB from "@/config/db";
 import Newsletter from "@/models/newsletter";

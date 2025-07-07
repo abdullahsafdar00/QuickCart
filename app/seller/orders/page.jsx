@@ -5,15 +5,19 @@ import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/seller/Footer";
 import Loading from "@/components/Loading";
+import { useUser } from '@clerk/nextjs';
 import axios from "axios";
 import toast from "react-hot-toast";
 
 const Orders = () => {
 
-    const { currency, getToken, user } = useAppContext();
+    const { currency, getToken, user, router } = useAppContext();
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+      const { isLoaded } = useUser();
+      const [isAuthorized, setIsAuthorized] = useState(false);
+    
 
     const fetchSellerOrders = async () => {
         try {
@@ -38,6 +42,14 @@ const Orders = () => {
         if (user) {
             fetchSellerOrders();
         }
+        if (isLoaded) {
+      const role = user?.publicMetadata?.role;
+      if (role === 'seller') {
+        setIsAuthorized(true);
+      } else {
+        router.replace('/access-denied'); // Optional: create this page
+      }
+    }
     }, [user]);
 
     return (

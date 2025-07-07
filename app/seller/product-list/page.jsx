@@ -84,7 +84,7 @@ const ProductList = () => {
     }
       if (isLoaded) {
       const role = user?.publicMetadata?.role;
-      if (role === 'admin') {
+      if (role === 'seller') {
         setIsAuthorized(true);
       } else {
         router.replace('/access-denied'); // Optional: create this page
