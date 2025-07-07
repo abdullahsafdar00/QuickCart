@@ -1,12 +1,17 @@
-
 import React from "react";
 import connectDB from "@/config/db";
 import Newsletter from "@/models/newsletter";
 import Footer from "@/components/seller/Footer";
 
 const NewsLetterPage = async () => {
-  await connectDB();
-  const emails = await Newsletter.find().sort({ createdAt: -1 });
+  let emails = [];
+
+  try {
+    await connectDB();
+    emails = await Newsletter.find().sort({ createdAt: -1 });
+  } catch (error) {
+    console.error("Database connection error:", error);
+  }
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between bg-white">
