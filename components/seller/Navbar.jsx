@@ -19,10 +19,7 @@ const Navbar = () => {
           <span className="text-[#EA580C]">HM</span>Electronics
         </h1>
          {user ? (
-                  <li>
-                    <UserButton>
-                    </UserButton>
-                  </li>
+                 <UserButton/>
                 ) : (
                   <li>
                     <button
