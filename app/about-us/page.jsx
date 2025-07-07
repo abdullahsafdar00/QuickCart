@@ -11,9 +11,7 @@ const About = () => {
   return (
     <>
       <Navbar />
-      <motion.section  initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}  className="w-full px-6 md:px-16 lg:px-32 py-16 bg-white text-gray-800 relative overflow-hidden">
+      <section   className="w-full px-6 md:px-16 lg:px-32 py-16 bg-white text-gray-800 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-60 h-60 bg-orange-100 rounded-full blur-3xl opacity-30 -z-10" />
         <div className="absolute bottom-0 left-0 w-72 h-72 bg-orange-200 rounded-full blur-3xl opacity-20 -z-10" />
 
@@ -108,7 +106,7 @@ const About = () => {
             </a>
           </motion.div>
         </div>
-      </motion.section>
+      </section>
       <Footer />
     </>
   );

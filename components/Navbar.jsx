@@ -17,12 +17,11 @@ const containerVariants = {
       staggerChildren: 0.08,
       delayChildren: 0.2
     }
-  }
-};
+  },};
 
 const itemVariants = {
   hidden: { opacity: 0, y: -10 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", damping: 15 } }
+  show: { opacity: 1, y: 0, transition: { type: "spring"} }
 };
 
 const Navbar = () => {
@@ -57,7 +56,7 @@ const Navbar = () => {
               <motion.div key={href} variants={itemVariants}>
                 <Link href={href} className="relative inline-block text-gray-600 transition 
   after:absolute after:bottom-0 after:left-0 after:h-[2px] after:rounded-full after:w-0 
-  after:bg-[#EA580C] after:transition-all after:duration-300 hover:after:w-full">
+  after:bg-[#EA580C] after:transition-all after:duration-300 after:ease-in-out hover:after:w-full">
                   {label}
                 </Link>
               </motion.div>
