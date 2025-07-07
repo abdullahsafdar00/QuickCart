@@ -68,7 +68,7 @@ const PrivacyPolicyPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-          <span className="text-gray-800">Privacy </span>  Policy
+         Privacy Policy
           </motion.h1>
 
           <p className="text-sm text-center text-gray-500">

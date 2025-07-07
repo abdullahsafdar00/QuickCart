@@ -31,7 +31,7 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            We’re one of Pakistan’s most trusted online electronics stores —
+            We’re one of Pakistan’s most trusted online electronics stores 
             committed to providing 100% original products with Cash on Delivery, fast shipping,
             and reliable customer support. Technology made simple, for everyone.
           </motion.p>
@@ -86,7 +86,7 @@ const About = () => {
           >
             <h4 className="text-xl font-semibold text-gray-900 mb-2">Our Vision</h4>
             <p className="max-w-2xl mx-auto text-gray-700 text-base">
-              To be Pakistan’s go-to marketplace for electronics — trusted, affordable, and
+              To be Pakistan’s go-to marketplace for electronics trusted, affordable, and
               always putting the customer first. We aim to deliver not just gadgets,
               but confidence, convenience, and care.
             </p>

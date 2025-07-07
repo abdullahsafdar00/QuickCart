@@ -89,7 +89,6 @@ const ProductCard = ({ product }) => {
 
       <div className="flex items-end justify-between w-full mt-1">
         <p className="text-base font-medium">
-          {currency}
           {product.offerPrice}
         </p>
         <motion.button
