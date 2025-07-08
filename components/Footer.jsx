@@ -46,7 +46,7 @@ const Footer = () => {
             <span className="text-[#EA580C]">HM</span>Electronics
           </h1>
           <p className="text-sm leading-relaxed text-gray-500">
-            We’re one of Pakistan’s most trusted online electronics stores —
+            We’re one of Pakistan’s most trusted online electronics stores,
             providing original products with Cash on Delivery, fast shipping,
             and great support.
           </p>
