@@ -78,7 +78,11 @@ const NewsLetter = () => {
           type="submit"
           className="md:px-12 px-8 h-full text-white bg-orange-600 rounded-md rounded-l-none"
         >
-          {status === "loading" ? "Subscribing..." : "Subscribe"}
+          {status === "loading" ?  <span className="flex space-x-1">
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+  </span> : "Subscribe"}
         </button>
       </form>
 
