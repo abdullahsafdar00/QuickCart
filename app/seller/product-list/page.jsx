@@ -96,84 +96,143 @@ const ProductList = () => {
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className="w-full md:p-10 p-4">
-          <h2 className="pb-4 text-lg font-medium">All Product</h2>
-          <div className="flex flex-col items-center max-w-4xl w-full overflow-hidden rounded-md bg-white border border-gray-500/20">
-            <table className="table-fixed w-full overflow-hidden">
-              <thead className="text-gray-900 text-sm text-left">
-                <tr>
-                  <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium truncate">Product</th>
-                  <th className="px-4 py-3 font-medium truncate max-sm:hidden">Category</th>
-                  <th className="px-4 py-3 font-medium truncate">Price</th>
-                  <th className="px-4 py-3 font-medium truncate max-sm:hidden">Action</th>
-                  <th className="px-4 py-3 font-medium truncate">In Stock</th>
-                  <th className="px-4 py-3 font-medium truncate max-sm:hidden">Delete</th>
-                </tr>
-              </thead>
-              <tbody className="text-sm text-gray-500">
-                {products.map((product, index) => (
-                  <tr key={index} className="border-t border-gray-500/20">
-                    <td className="md:px-4 pl-2 md:pl-4 py-3 flex items-center space-x-3 truncate">
-                      <div className="bg-gray-500/10 rounded p-2">
-                        <Image
-                          src={product.image[0]}
-                          alt="product Image"
-                          className="w-16"
-                          width={1280}
-                          height={720}
-                        />
-                      </div>
-                      <span className="truncate w-full">{product.name}</span>
-                    </td>
-                    <td className="px-4 py-3 max-sm:hidden">{product.category}</td>
-                    <td className="px-4 py-3">${product.offerPrice}</td>
-                    <td className="px-4 py-3 max-sm:hidden">
-                      <button
-                        onClick={() => router.push(`/product/${product._id}`)}
-                        className="flex items-center gap-1 px-2 md:px-5 py-2 bg-orange-600 text-white rounded-md"
-                      >
-                        <span className="hidden md:block">Visit</span>
-                        <Image
-                          className="h-3.5"
-                          src={assets.redirect_icon}
-                          alt="redirect_icon"
-                        />
-                      </button>
-                    </td>
+  {loading ? (
+    <Loading />
+  ) : (
+    <div className="w-full md:p-10 p-4">
+      <h2 className="pb-4 text-lg font-medium">All Products</h2>
+
+      {/* Responsive Table Wrapper */}
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-full hidden sm:table bg-white border border-gray-200 rounded-md">
+          <thead className="text-gray-900 text-sm text-left">
+            <tr>
+              <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium">Product</th>
+              <th className="px-4 py-3 font-medium">Category</th>
+              <th className="px-4 py-3 font-medium">Price</th>
+              <th className="px-4 py-3 font-medium">Action</th>
+              <th className="px-4 py-3 font-medium">In Stock</th>
+              <th className="px-4 py-3 font-medium">Delete</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm text-gray-600">
+            {products.map((product, index) => (
+              <tr key={index} className="border-t border-gray-100">
+                <td className="px-4 py-3 flex items-center gap-3">
+                  <Image
+                    src={product.image[0]}
+                    alt="Product"
+                    className="w-16 h-16 object-cover rounded"
+                    width={64}
+                    height={64}
+                  />
+                  <span className="truncate">{product.name}</span>
+                </td>
+                <td className="px-4 py-3">{product.category}</td>
+                <td className="px-4 py-3">{product.offerPrice}</td>
                 <td className="px-4 py-3">
-  <button
-    onClick={() => handleToggleStock(product._id, !product.inStock)}
-    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-      product.inStock ? "bg-[#EA580C]" : "bg-gray-300"
-    }`}
-  >
-    <span
-      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-        product.inStock ? "translate-x-6" : "translate-x-1"
-      }`}
-    />
-  </button>
-</td>
-                    <td className="px-4 py-3 max-sm:hidden">
-                      <button
-                        onClick={() => handleDelete(product._id)}
-                        className="text-red-600 hover:underline"
-                      >
-                        Remove
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                  <button
+                    onClick={() => router.push(`/product/${product._id}`)}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-orange-600 text-white rounded-md text-xs"
+                  >
+                    <span className="hidden md:block">Visit</span>
+                    <Image
+                      className="h-3.5"
+                      src={assets.redirect_icon}
+                      alt="redirect_icon"
+                    />
+                  </button>
+                </td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => handleToggleStock(product._id, !product.inStock)}
+                    className={`inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      product.inStock ? "bg-[#EA580C]" : "bg-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform bg-white rounded-full transition-transform ${
+                        product.inStock ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </td>
+                <td className="px-4 py-3">
+                  <button
+                    onClick={() => handleDelete(product._id)}
+                    className="text-red-600 hover:underline text-sm"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Mobile Layout */}
+        <div className="sm:hidden space-y-4">
+          {products.map((product, index) => (
+            <div
+              key={index}
+              className="border border-gray-300 rounded-md p-4 bg-white flex flex-col gap-3"
+            >
+              <div className="flex items-center gap-3">
+                <Image
+                  src={product.image[0]}
+                  alt="Product"
+                  className="w-16 h-16 object-cover rounded"
+                  width={64}
+                  height={64}
+                />
+                <div className="flex-1">
+                  <h3 className="text-base font-medium">{product.name}</h3>
+                  <p className="text-sm text-gray-500">{product.category}</p>
+                </div>
+              </div>
+              <p className="text-sm">
+                <span className="font-medium">Price:</span> ${product.offerPrice}
+              </p>
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => router.push(`/product/${product._id}`)}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-orange-600 text-white rounded-md text-xs"
+                >
+                  Visit
+                  <Image
+                    className="h-3.5"
+                    src={assets.redirect_icon}
+                    alt="redirect_icon"
+                  />
+                </button>
+                <button
+                  onClick={() => handleToggleStock(product._id, !product.inStock)}
+                  className={`inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                    product.inStock ? "bg-[#EA580C]" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform bg-white rounded-full transition-transform ${
+                      product.inStock ? "translate-x-6" : "translate-x-1"
+                    }`}
+                  />
+                </button>
+                <button
+                  onClick={() => handleDelete(product._id)}
+                  className="text-red-600 hover:underline text-xs"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
-      <Footer />
+      </div>
     </div>
+  )}
+  <Footer />
+</div>
+
   );
 };
 

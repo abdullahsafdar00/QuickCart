@@ -103,7 +103,11 @@ const ContactUs = () => {
               disabled={status === "loading"}
               className="bg-orange-600 text-white px-6 py-2 rounded-full hover:bg-orange-700 transition w-full md:w-auto"
             >
-              {status === "loading" ? "Sending..." : "Send Message"}
+              {status === "loading" ?   <span className="flex space-x-1">
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+  </span> : "Send Message"}
             </button>
 
             {status === "success" && (
@@ -132,7 +136,7 @@ const ContactUs = () => {
               <p>
                 📧 Email:{" "}
                 <a href="mailto:support@hmelectronics.pk" className="text-orange-600">
-                  support@hmelectronics.pk
+                  hmelectronics.shop@gmail.com
                 </a>
               </p>
               <p>
@@ -157,16 +161,27 @@ const ContactUs = () => {
           href="https://wa.me/923040505905"
           target="_blank"
           rel="noopener noreferrer"
-          className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-xl z-50 transition"
+          className="fixed bottom-6 right-6 p-4 rounded-full shadow-xl z-50 transition"
           aria-label="Chat on WhatsApp"
         >
-          <svg
-            className="w-6 h-6"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M20.52 3.48A11.94 11.94 0 0012 0C5.37 0 0 5.37 0 12c0 2.11.55 4.15 1.61 5.96L0 24l6.28-1.65a11.94 11.94 0 005.72 1.46c6.63 0 12-5.37 12-12 0-3.19-1.24-6.19-3.48-8.52zM12 21.75a9.76 9.76 0 01-4.94-1.35l-.35-.2-3.73.99 1-3.65-.23-.38a9.76 9.76 0 0115.5-11.42A9.76 9.76 0 0121.75 12c0 5.37-4.38 9.75-9.75 9.75zm5.4-7.95c-.3-.15-1.76-.86-2.03-.96s-.47-.15-.67.15c-.2.3-.76.96-.93 1.16-.17.2-.35.23-.65.08s-1.27-.47-2.42-1.5a9.18 9.18 0 01-1.7-2.12c-.18-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.38 0-.53-.05-.15-.66-1.6-.9-2.2-.24-.6-.5-.52-.67-.53H8.1c-.15 0-.4.06-.6.3s-.8.78-.8 1.9.82 2.2.93 2.35c.12.15 1.6 2.5 3.88 3.5 2.28 1 2.28.67 2.7.63.43-.04 1.4-.57 1.6-1.12.2-.56.2-1.04.15-1.15-.05-.1-.25-.16-.55-.3z" />
-          </svg>
+            <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    className="w-6 h-6"
+    role="img"
+    fill="none"
+    stroke="none"
+  >
+    <title>WhatsApp</title>
+    <path
+      fill="#25D366"
+      d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.62-6.003C.122 5.3 5.495 0 12.057 0c3.2 0 6.217 1.246 8.477 3.507a11.821 11.821 0 013.498 8.414c-.003 6.562-5.377 11.935-11.94 11.935a11.9 11.9 0 01-5.606-1.426L.057 24z"
+    />
+    <path
+      fill="#FFF"
+      d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.472-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.15-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.151-.172.2-.296.298-.495.099-.198.05-.372-.025-.52-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.372-.01-.571-.01-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.29.173-1.413-.074-.123-.272-.198-.57-.347z"
+    />
+  </svg>
         </a>
       </section>
 

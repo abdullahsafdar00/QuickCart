@@ -67,7 +67,7 @@ const ProductCard = ({ product }) => {
       {!product.inStock && (
         <span className="text-xs text-red-600 mt-1">Out of Stock</span>
       )}
-      <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">
+       <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">
         {product.description}
       </p>
       <div className="flex items-center gap-2">
@@ -89,6 +89,7 @@ const ProductCard = ({ product }) => {
 
       <div className="flex items-end justify-between w-full mt-1">
         <p className="text-base font-medium">
+          {currency}
           {product.offerPrice}
         </p>
         <motion.button

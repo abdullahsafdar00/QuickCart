@@ -12,6 +12,7 @@ const OrderSummary = () => {
   const { currency, router, getCartCount, getCartAmount, getToken, user, setCartItems, cartItems } = useAppContext()
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [status, setStatus] = useState("")
 
   const [userAddresses, setUserAddresses] = useState([]);
 
@@ -40,6 +41,7 @@ const OrderSummary = () => {
   };
 
   const createOrder = async () => {
+    setStatus("loading")
     try {
       if (!selectedAddress) {
         return toast.error("Please select an address")
@@ -54,6 +56,7 @@ const OrderSummary = () => {
       } 
 
       const token = await getToken();
+      
 
       const { data } = await axios.post('/api/order/create', {address: selectedAddress._id, items: cartItemsArray}, {headers: {Authorization: `Bearer ${token}`}})
 
@@ -128,21 +131,7 @@ const OrderSummary = () => {
           </div>
         </div>
 
-        <div>
-          <label className="text-base font-medium uppercase text-gray-600 block mb-2">
-            Promo Code
-          </label>
-          <div className="flex flex-col items-start gap-3">
-            <input
-              type="text"
-              placeholder="Enter promo code"
-              className="flex-grow w-full outline-none p-2.5 text-gray-600 border"
-            />
-            <button className="bg-orange-600 text-white px-9 py-2 hover:bg-orange-700">
-              Apply
-            </button>
-          </div>
-        </div>
+       
 
         <hr className="border-gray-500/30 my-5" />
 
@@ -166,9 +155,17 @@ const OrderSummary = () => {
         </div>
       </div>
 
-      <button onClick={createOrder} className="w-full bg-orange-600 text-white py-3 mt-5 hover:bg-orange-700">
-        Place Order
-      </button>
+          <button
+          type="submit"
+          onClick={createOrder}
+          className="w-full bg-orange-600 h-12 text-white py-3 mt-5 hover:bg-orange-700"
+        >
+          {status === "loading" ?  <span className="flex items-center justify-center space-x-1">
+    <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+    <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+    <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce" />
+  </span> : "Place Order"}
+        </button>
     </motion.div>
   );
 };

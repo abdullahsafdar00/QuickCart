@@ -53,50 +53,66 @@ const Orders = () => {
     }, [user]);
 
     return (
-        <div className="flex-1 h-screen overflow-scroll flex flex-col justify-between text-sm">
-            {loading ? <Loading /> : <div className="md:p-10 p-4 space-y-5">
-                <h2 className="text-lg font-medium">Orders</h2>
-                <div className="max-w-4xl rounded-md">
-                    {orders.map((order, index) => (
-                        <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-t border-gray-300">
-                            <div className="flex-1 flex gap-5 max-w-80">
-                                <Image
-                                    className="max-w-16 max-h-16 object-cover"
-                                    src={assets.box_icon}
-                                    alt="box_icon"
-                                />
-                                <p className="flex flex-col gap-3">
-                                    <span className="font-medium">
-                                        {order.items.map((item) => item.product?.name + ` x ${item.quantity}`).join(", ")}
-                                    </span>
-                                    <span>Items : {order.items.length}</span>
-                                </p>
-                            </div>
-                            <div>
-                                <p>
-                                    <span className="font-medium">{order.address.fullName}</span>
-                                    <br />
-                                    <span >{order.address.area}</span>
-                                    <br />
-                                    <span>{`${order.address.city}, ${order.address.state}`}</span>
-                                    <br />
-                                    <span>{order.address.phoneNumber}</span>
-                                </p>
-                            </div>
-                            <p className="font-medium my-auto">{currency}{order.amount}</p>
-                            <div>
-                                <p className="flex flex-col">
-                                    <span>Method : COD</span>
-                                    <span>Date : {new Date(order.date).toLocaleDateString()}</span>
-                                    <span>Payment : Pending</span>
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>}
-            <Footer />
-        </div>
+       <div className="flex-1 min-h-screen flex flex-col justify-between text-sm">
+  {loading ? (
+    <Loading />
+  ) : (
+    <div className="md:p-10 p-4 space-y-5">
+      <h2 className="text-lg font-medium">Orders</h2>
+      <div className="max-w-4xl w-full space-y-4">
+        {orders.map((order, index) => (
+          <div
+            key={index}
+            className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 p-5 border rounded-md bg-white shadow-sm"
+          >
+            {/* Order Summary */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:max-w-sm w-full">
+              <Image
+                className="w-16 h-16 object-cover"
+                src={assets.box_icon}
+                alt="box_icon"
+              />
+              <div className="flex-1">
+                <p className="font-medium break-words">
+                  {order.items
+                    .map(
+                      (item) =>
+                        `${item.product?.name ?? "Product"} x ${item.quantity}`
+                    )
+                    .join(", ")}
+                </p>
+                <p className="text-gray-600 mt-1">Items: {order.items.length}</p>
+              </div>
+            </div>
+
+            {/* Address */}
+            <div className="text-gray-700 text-sm w-full sm:w-1/3">
+              <p className="font-medium">{order.address.fullName}</p>
+              <p>{order.address.area}</p>
+              <p>{`${order.address.city}, ${order.address.state}`}</p>
+              <p>{order.address.phoneNumber}</p>
+            </div>
+
+            {/* Amount */}
+            <div className="text-black font-semibold my-auto sm:text-right">
+              {currency}
+              {order.amount}
+            </div>
+
+            {/* Meta Info */}
+            <div className="text-gray-600 text-sm w-full sm:w-1/4">
+              <p>Method: COD</p>
+              <p>Date: {new Date(order.date).toLocaleDateString()}</p>
+              <p>Payment: Pending</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+  <Footer />
+</div>
+
     );
 };
 
