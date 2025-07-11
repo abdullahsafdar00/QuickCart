@@ -23,7 +23,12 @@ const OrderPlaced = () => {
         <div className="animate-spin rounded-full h-24 w-24 border-4 border-t-green-300 border-gray-200"></div>
       </div>
       <div className="text-center text-2xl font-semibold">Order Placed Successfully</div>
-      <div className="text-sm text-gray-500">Redirecting shortly...</div>
+      <span className="flex space-x-2">
+  <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+  <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+  <span className="w-2.5 h-2.5 bg-white rounded-full animate-bounce" />
+</span>
+
     </div>
     </div>
   )
