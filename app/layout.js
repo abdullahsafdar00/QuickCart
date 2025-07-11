@@ -11,6 +11,7 @@ export const metadata = {
   description: "E-Commerce with Next.js ",
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider
@@ -19,6 +20,7 @@ export default function RootLayout({ children }) {
 >
   <html lang="en">
     <body className={`${outfit.className} antialiased text-gray-700`}>
+      
       <Toaster />
       <AppContextProvider>
         {children}
