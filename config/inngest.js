@@ -1,7 +1,6 @@
 import { Inngest } from "inngest";
 import connectDB from "./db";
 import User from "@/models/user";
-import { connect } from "mongoose";
 import Order from "@/models/order";
 
 // Create a client to send and receive events
