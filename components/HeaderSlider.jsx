@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -37,7 +37,7 @@ const HeaderSlider = () => {
   const [isAnimating, setIsAnimating] = useState(true);
 
   const totalSlides = sliderData.length;
-  const extendedSlides = [...sliderData, sliderData[0]]; // Clone first slide
+  const extendedSlides = [...sliderData, sliderData[0]];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,8 +52,7 @@ const HeaderSlider = () => {
       const timeout = setTimeout(() => {
         setIsAnimating(false);
         setCurrentSlide(0);
-      }, 700); // match transition duration
-
+      }, 700);
       return () => clearTimeout(timeout);
     } else {
       setIsAnimating(true);
@@ -67,11 +66,14 @@ const HeaderSlider = () => {
 
   return (
     <div className="overflow-hidden relative w-full">
-      <div
+      <motion.div
         className={`flex ${isAnimating ? "transition-transform duration-700 ease-in-out" : ""}`}
         style={{
           transform: `translateX(-${currentSlide * 100}%)`,
         }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.2}
       >
         {extendedSlides.map((slide, index) => (
           <div
@@ -84,19 +86,25 @@ const HeaderSlider = () => {
                 {slide.title}
               </h1>
               <div className="flex items-center mt-4 md:mt-6 ">
-                <button  className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium">
+                <button className="md:px-10 px-7 md:py-2.5 py-2 bg-orange-600 rounded-full text-white font-medium">
                   {slide.buttonText1}
                 </button>
                 <button className="group flex items-center gap-2 px-6 py-2.5 font-medium">
                   {slide.buttonText2}
-                  <motion.div  animate={{ scale: [1, 1.3, 1] }}
-          transition={{
-            duration: 0.6,
-            repeat: Infinity,
-            repeatType: 'loop',
-            ease: 'easeInOut',
-          }}>
-                     <Image className="group-hover:translate-x-1 transition" src={assets.arrow_icon} alt="arrow_icon" />
+                  <motion.div
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      ease: "easeInOut",
+                    }}
+                  >
+                    <Image
+                      className="group-hover:translate-x-1 transition"
+                      src={assets.arrow_icon}
+                      alt="arrow_icon"
+                    />
                   </motion.div>
                 </button>
               </div>
@@ -110,7 +118,7 @@ const HeaderSlider = () => {
             </div>
           </div>
         ))}
-      </div>
+      </motion.div>
 
       <div className="flex items-center justify-center gap-2 mt-8">
         {sliderData.map((_, index) => (

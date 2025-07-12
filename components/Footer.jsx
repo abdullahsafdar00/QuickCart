@@ -22,10 +22,10 @@ const Footer = () => {
 
   const mailVariants = {
     animate: {
-      scale: [1, 1.4, 1],
-      y: [0, -2, 0],
+      scale: [1, 1.1, 1],
+      y: [0, -1, 0],
       transition: {
-        duration: 1.4,
+        duration: 1.2,
         repeat: Infinity,
         ease: "easeInOut",
       },

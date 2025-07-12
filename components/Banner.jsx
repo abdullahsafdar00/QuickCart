@@ -24,12 +24,11 @@ const Banner = () => {
           From immersive sound to precise controls—everything you need to win
         </p>
         <motion.button animate={{
-    rotate: [0, -10, 5, -10, 5, -5, 5, 0],
+    rotate: [0, -5, 5, -5, 5, -5, 5, 0],
     transition: {
       duration: 1.2,
       repeat: Infinity,
-      repeatType: "reverse",
-      repeatDelay: 0.1,
+      repeatDelay: 0.3,
       ease: "easeInOut",
     },
   }} className="group flex items-center justify-center gap-1 px-6 py-2.5 bg-orange-600 rounded text-white">
