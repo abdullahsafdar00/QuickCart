@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { ContactIcon, PaintbrushVerticalIcon, Menu, X } from "lucide-react";
-import { ListOrderedIcon } from "lucide-react";
+import { ShoppingBagIcon } from "lucide-react";
 
 const containerVariants = {
   hidden: {},
@@ -43,6 +43,7 @@ const Navbar = () => {
 
   const navLinks = [
     { label: "Home", href: "/", icon: <HomeIcon /> },
+    { label: "All Products", href: "/all-products", icon: <ShoppingBagIcon/> },
     { label: "My Cart", href: "/cart", icon: <CartIcon /> },
     { label: "My Orders", href: "/my-orders", icon: <BagIcon /> },
     { label: "About", href: "/about-us", icon: <HomeIcon /> },
