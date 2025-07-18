@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 
+
 const AddProduct = () => {
   const { getToken, user, router } = useAppContext();
 
@@ -18,8 +19,9 @@ const AddProduct = () => {
   const [category, setCategory] = useState('Earphone');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
-   const { isLoaded } = useUser();
-    const [isAuthorized, setIsAuthorized] = useState(false);
+  const { isLoaded } = useUser();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [status, setStatus] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,6 +39,8 @@ const AddProduct = () => {
       
     }
 
+    setStatus("loading")
+
     try {
       const token = await getToken();
       const { data } = await axios.post('/api/product/add', formData, {headers: {Authorization: `Bearer ${token}`}})
@@ -48,12 +52,14 @@ const AddProduct = () => {
         setCategory('Earphone');
         setPrice('');
         setOfferPrice('');
-
+        setStatus("success")
       } else {
         toast.error(data.message);
+        setStatus("error");
       }
     } catch (error) {
       toast.error(error.message)
+      setStatus("error");
     }
 
   };
@@ -143,12 +149,11 @@ const AddProduct = () => {
               defaultValue={category}
             >
               <option value="Earphone">Earphone</option>
-              <option value="Headphone">Headphone</option>
+              <option value="Headphone">Irons & Steamers</option>
               <option value="Watch">Watch</option>
-              <option value="Smartphone">Smartphone</option>
-              <option value="Laptop">Laptop</option>
-              <option value="Camera">Camera</option>
-              <option value="Accessories">Accessories</option>
+              <option value="Camera">Body Massager</option>
+              <option value="Accessories">Kitchen Appliances</option>
+              <option value="Hair Straighteners">Beauty products and tools</option>
             </select>
           </div>
           <div className="flex flex-col gap-1 w-32">
@@ -166,13 +171,14 @@ const AddProduct = () => {
             />
           </div>
           <div className="flex flex-col gap-1 w-32">
-            <label className="text-base font-medium" htmlFor="offer-price">
-              Offer Price
+            <label className="text-base font-medium w-40" htmlFor="offer-price">
+              Offer Price (Optional)
             </label>
             <input
               id="offer-price"
               type="number"
               placeholder="0"
+              formNoValidate
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
               onChange={(e) => setOfferPrice(e.target.value)}
               value={offerPrice}
@@ -180,10 +186,21 @@ const AddProduct = () => {
             />
           </div>
         </div>
-        <button type="submit" className="px-8 py-2.5 bg-orange-600 text-white font-medium rounded">
-          ADD
+          <button
+          type="submit"
+          className="md:px-6 px-6 h-10 text-white bg-orange-600 rounded-md rounded-l-none"
+        >
+          {status === "loading" ? <span className="flex space-x-1">
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+  </span> : "Add Product"}
         </button>
       </form>
+         {status === "success" && (
+        <p className="text-green-600 pt-2">Thank you for subscribing!</p>
+
+      )}
       {/* <Footer /> */}
     </div>
   );

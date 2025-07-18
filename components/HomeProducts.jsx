@@ -34,40 +34,49 @@ const HomeProducts = () => {
       <p className="text-2xl font-medium text-left w-full">
         Popular <span className="text-[#EA580C]">products</span>
       </p>
+      <p className="text-gray-500 text-left w-full mb-4">Discover our top categories and trending products, including the latest in hair styling tools!</p>
 
-      {/* Product Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
-        {/* Real Products */}
-        {products.length > 0 &&
-          products.map((product, index) => (
-            <ProductCard key={index} product={product} />
-          ))}
-
-        {/* Skeletons */}
-        {products.length === 0 &&
-          [...Array(10)].map((_, index) => (
+      {/* Category Grouped Products */}
+      {products.length > 0 ? (
+        Array.from(
+          products.reduce((acc, product) => {
+            if (!acc.has(product.category)) acc.set(product.category, []);
+            acc.get(product.category).push(product);
+            return acc;
+          }, new Map())
+        ).map(([category, prods]) => (
+          <div key={category} className="w-full mb-10">
+            <h2 className="text-xl font-semibold text-orange-600 mb-3">{category}</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {prods.slice(0, 5).map((product, index) => (
+                <ProductCard key={index} product={product} />
+              ))}
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
+          {[...Array(10)].map((_, index) => (
             <div
               key={index}
               className="flex flex-col bg-white shadow-md rounded-xl animate-pulse"
             >
               {/* Image Placeholder */}
               <div className="h-40 sm:h-48 md:h-56 bg-gray-300 rounded-t-xl" />
-
               {/* Text Placeholder */}
               <div className="p-4 flex flex-col gap-2">
                 <div className="h-4 bg-gray-300 rounded w-3/4" />
                 <div className="h-3 bg-gray-300 rounded w-1/2" />
                 <div className="h-3 bg-gray-300 rounded w-2/3" />
               </div>
-
               {/* Button Placeholder */}
               <div className="p-4 pt-0">
                 <div className="h-8 lg:ml-24 rounded-md bg-gray-300  w-1/2 mx-auto" />
               </div>
             </div>
           ))}
-      </div>
-
+        </div>
+      )}
       {/* See More Button */}
       <button
         onClick={() => router.push('/all-products')}

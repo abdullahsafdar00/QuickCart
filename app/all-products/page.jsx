@@ -25,19 +25,27 @@ const AllProducts = () => {
         </div>
 
         {/* Grid */}
+        <p className="text-gray-500 text-left w-full mb-4">Tip: Click on a category heading to quickly filter products by that category!</p>
         {products.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-12 pb-20 w-full">
-            {products.map((product, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </div>
+          Array.from(
+            products.reduce((acc, product) => {
+              if (!acc.has(product.category)) acc.set(product.category, []);
+              acc.get(product.category).push(product);
+              return acc;
+            }, new Map())
+          ).map(([category, prods]) => (
+            <div key={category} className="w-full mb-10">
+              <h2 className="text-xl font-semibold text-orange-600 mb-3 cursor-pointer hover:underline" onClick={() => {
+                const el = document.getElementById(`cat-${category}`);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }}>{category}</h2>
+              <div id={`cat-${category}`} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                {prods.map((product, index) => (
+                  <ProductCard key={index} product={product} />
+                ))}
+              </div>
+            </div>
+          ))
         ) : (
          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-12 pb-20 w-full">
   {[...Array(10)].map((_, index) => (

@@ -153,15 +153,18 @@ const Product = () => {
             </div>
             <div className="flex flex-col items-center">
                 <div className="flex flex-col items-center mb-4 mt-16">
-                    <p className="text-3xl font-medium">Featured <span className="font-medium text-orange-600">Products</span></p>
+                    <p className="text-3xl font-medium">More from <span className="font-medium text-orange-600">{productData.category}</span></p>
                     <div className="w-28 h-0.5 bg-orange-600 mt-2"></div>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-6 pb-14 w-full">
-                    {products.slice(0, 5).map((product, index) => <ProductCard key={index} product={product} />)}
+                    {products.filter(p => p.category === productData.category && p._id !== productData._id).length > 0 ? (
+                        products.filter(p => p.category === productData.category && p._id !== productData._id).slice(0, 8).map((product, index) => (
+                            <ProductCard key={index} product={product} />
+                        ))
+                    ) : (
+                        <div className="col-span-full text-gray-500 text-center">No other products in this category yet. Check back soon!</div>
+                    )}
                 </div>
-                <button className="px-8 py-2 mb-16 border rounded text-gray-500/70 hover:bg-slate-50/90 transition">
-                    See more
-                </button>
             </div>
         </motion.div>
         <Footer />
