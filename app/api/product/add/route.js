@@ -22,54 +22,32 @@ export async function POST(request) {
             return NextResponse.json({success: false, message: "not authorized"})
         }
 
-        const formData = await request.formData()
+        // Accept JSON body with image URLs
+        const body = await request.json();
+        const { name, description, category, price, offerPrice, image } = body;
 
-        const name = formData.get('name')
-        const description = formData.get("description")
-        const category = formData.get("category")
-        const price = formData.get("price")
-        const offerPrice = formData.get("offerPrice")
-
-        const files = formData.getAll("images")
-        if (!files || files.length === 0) {
-            return NextResponse.json({success: false, message: "no files uploaded"})
+        if (!image || !Array.isArray(image) || image.length === 0) {
+            return NextResponse.json({success: false, message: "No image URLs provided"});
         }
-        const result = await Promise.all(
-            files.map(async(file)=>{
-                const arrayBuffer = await file.arrayBuffer();
-                const buffer = Buffer.from(arrayBuffer);
-                return new Promise((resolve, reject)=>{
-                    const stream = cloudinary.uploader.upload_stream(
-                        { resource_type: 'auto'},
-                        (error, result) => {
-                            if (error) {
-                                reject(error);
-                            } else {
-                                resolve(result)
-                            }
-                        }
-                    )
-                    stream.end(buffer)
-                })
-            }))
+        // Optionally: validate URLs are Cloudinary links
+        if (!image.every(url => typeof url === 'string' && url.startsWith('http'))) {
+            return NextResponse.json({success: false, message: "Invalid image URLs"});
+        }
 
-
-            const image = result.map(result => result.secure_url)
-
-            await connectDB();
-            const realUserId = typeof userId === 'string' ? userId : userId?.userId;
-            const newProduct = await Product.create({
-                userId: realUserId,
-                name,
-                description,
-                category,
-                price: Number(price),
-                offerPrice: Number(offerPrice),
-                image,
-                date: new Date()
-            })
-            return NextResponse.json({success: true, message: "Upload Successfully", newProduct})
+        await connectDB();
+        const realUserId = typeof userId === 'string' ? userId : userId?.userId;
+        const newProduct = await Product.create({
+            userId: realUserId,
+            name,
+            description,
+            category,
+            price: Number(price),
+            offerPrice: Number(offerPrice),
+            image,
+            date: new Date()
+        });
+        return NextResponse.json({success: true, message: "Upload Successfully", newProduct});
     } catch (error) {
-        return NextResponse.json({success: false, message: error.message})
+        return NextResponse.json({success: false, message: error.message});
     }
 }
