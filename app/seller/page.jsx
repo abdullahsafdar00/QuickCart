@@ -10,6 +10,21 @@ import axios from "axios";
 
 
 
+// Cloudinary config (set these to your values)
+const CLOUDINARY_UPLOAD_PRESET = 'ecommerce_unsigned'; // <-- set your unsigned preset name
+const CLOUDINARY_CLOUD_NAME = 'dlwtqjap0'; // <-- set your Cloudinary cloud name
+
+async function uploadToCloudinary(file) {
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  const res = await fetch(url, { method: 'POST', body: formData });
+  if (!res.ok) throw new Error('Cloudinary upload failed');
+  const data = await res.json();
+  return data.secure_url;
+}
+
 const AddProduct = () => {
   const { getToken, user, router } = useAppContext();
 
@@ -22,28 +37,33 @@ const AddProduct = () => {
   const { isLoaded } = useUser();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [status, setStatus] = useState("")
+  const [uploading, setUploading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData()
-
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("category", category);
-    formData.append("price", price);
-    formData.append("offerPrice", offerPrice);
-
-    for (let i = 0; i < files.length; i++) {
-      formData.append('images', files[i])
-      
-    }
-
-    setStatus("loading")
-
+    setStatus('loading');
+    setUploading(true);
     try {
+      // Upload all images to Cloudinary first
+      const imageUrls = [];
+      for (let i = 0; i < files.length; i++) {
+        if (files[i]) {
+          const url = await uploadToCloudinary(files[i]);
+          imageUrls.push(url);
+        }
+      }
+      setUploading(false);
+      // Now send product data with image URLs to backend
+      const formData = {
+        name,
+        description,
+        category,
+        price,
+        offerPrice,
+        image: imageUrls,
+      };
       const token = await getToken();
-      const { data } = await axios.post('/api/product/add', formData, {headers: {Authorization: `Bearer ${token}`}})
+      const { data } = await axios.post('/api/product/add', formData, {headers: {Authorization: `Bearer ${token}`}});
       if(data.success) {
         toast.success(data.message);
         setFiles('');
@@ -52,16 +72,16 @@ const AddProduct = () => {
         setCategory('Earphone');
         setPrice('');
         setOfferPrice('');
-        setStatus("success")
+        setStatus('success');
       } else {
         toast.error(data.message);
-        setStatus("error");
+        setStatus('error');
       }
     } catch (error) {
-      toast.error(error.message)
-      setStatus("error");
+      setUploading(false);
+      toast.error(error.message);
+      setStatus('error');
     }
-
   };
 
  function isAdmin(){
@@ -89,8 +109,13 @@ const AddProduct = () => {
             {[...Array(4)].map((_, index) => (
               <label key={index} htmlFor={`image${index}`}>
                 <input onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file && file.size > 2 * 1024 * 1024) { // 2MB limit
+                    toast.error('Each image must be less than 2MB');
+                    return;
+                  }
                   const updatedFiles = [...files];
-                  updatedFiles[index] = e.target.files[0];
+                  updatedFiles[index] = file;
                   setFiles(updatedFiles);
                 }} type="file" id={`image${index}`} hidden />
                 <Image
@@ -189,12 +214,15 @@ const AddProduct = () => {
           <button
           type="submit"
           className="md:px-6 px-6 h-10 text-white bg-orange-600 rounded-md rounded-l-none"
+          disabled={uploading || status === 'loading'}
         >
-          {status === "loading" ? <span className="flex space-x-1">
-    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
-    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
-    <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
-  </span> : "Add Product"}
+          {uploading ? 'Uploading Images...' : status === 'loading' ? (
+            <span className="flex space-x-1">
+              <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+            </span>
+          ) : 'Add Product'}
         </button>
       </form>
          {status === "success" && (
