@@ -5,7 +5,7 @@
     name: {type: String, required:true},
     description: {type: String, required:true},
     price: {type: Number, required:true},
-    offerPrice: {type: Number, required:true},
+    offerPrice: {type: Number, min: 0, default: 0},
     image: {type: Array, required:true},
     category: {type: String, required:true},
     date: {type: Date, required:true},
