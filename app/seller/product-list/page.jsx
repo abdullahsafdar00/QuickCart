@@ -108,6 +108,7 @@ const ProductList = () => {
           <thead className="text-gray-900 text-sm text-left">
             <tr>
               <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium">Product</th>
+              <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium">Title</th>
               <th className="px-4 py-3 font-medium">Category</th>
               <th className="px-4 py-3 font-medium">Price</th>
               <th className="px-4 py-3 font-medium">Action</th>
@@ -122,14 +123,14 @@ const ProductList = () => {
                   <Image
                     src={product.image[0]}
                     alt="Product"
-                    className="w-16 h-16 object-cover rounded"
+                    className= "object-cover rounded"
                     width={64}
                     height={64}
                   />
-                  <span className="truncate">{product.name}</span>
+                  <span className="truncate px-20 py-3">{product.name}</span>
                 </td>
                 <td className="px-4 py-3">{product.category}</td>
-                <td className="px-4 py-3">{product.offerPrice}</td>
+                <td className="px-4 py-3">{product.offerPrice > 0 ? product.offerPrice : product.price}</td>
                 <td className="px-4 py-3">
                   <button
                     onClick={() => router.push(`/product/${product._id}`)}
@@ -191,7 +192,7 @@ const ProductList = () => {
                 </div>
               </div>
               <p className="text-sm">
-                <span className="font-medium">Price:</span> ${product.offerPrice}
+                <span className="font-medium">Price:</span> ${product.offerPrice > 0 ? product.offerPrice : product.price}
               </p>
               <div className="flex items-center justify-between">
                 <button
