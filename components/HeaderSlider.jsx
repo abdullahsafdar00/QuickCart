@@ -35,6 +35,7 @@ const HeaderSlider = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(true);
+  const sliderRef = useRef(null);
 
   const totalSlides = sliderData.length;
   const extendedSlides = [...sliderData, sliderData[0]];
@@ -59,13 +60,42 @@ const HeaderSlider = () => {
     }
   }, [currentSlide, totalSlides]);
 
+  // Touch swipe for mobile
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+    let startX = 0;
+    let endX = 0;
+    const handleTouchStart = (e) => {
+      startX = e.touches[0].clientX;
+    };
+    const handleTouchMove = (e) => {
+      endX = e.touches[0].clientX;
+    };
+    const handleTouchEnd = () => {
+      if (startX - endX > 50) {
+        setCurrentSlide((prev) => Math.min(prev + 1, totalSlides - 1));
+      } else if (endX - startX > 50) {
+        setCurrentSlide((prev) => Math.max(prev - 1, 0));
+      }
+    };
+    slider.addEventListener('touchstart', handleTouchStart);
+    slider.addEventListener('touchmove', handleTouchMove);
+    slider.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      slider.removeEventListener('touchstart', handleTouchStart);
+      slider.removeEventListener('touchmove', handleTouchMove);
+      slider.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [totalSlides]);
+
   const handleSlideChange = (index) => {
     setIsAnimating(true);
     setCurrentSlide(index);
   };
 
   return (
-    <div className="overflow-hidden relative w-full">
+    <div className="overflow-hidden relative w-full" ref={sliderRef} role="region" aria-label="Header slider">
       <motion.div
         className={`flex ${isAnimating ? "transition-transform duration-700 ease-in-out" : ""}`}
         style={{

@@ -2,6 +2,7 @@
 import React from "react";
 import ProductCard from "./ProductCard";
 import { useAppContext } from "@/context/AppContext";
+import Image from "next/image";
 
 const HomeProducts = () => {
   const { products, router } = useAppContext();
@@ -30,13 +31,48 @@ const HomeProducts = () => {
         </svg>
       </a>
 
-      {/* Section Title */}
-      <p className="text-2xl font-medium text-left w-full">
-        Popular <span className="text-[#EA580C]">products</span>
-      </p>
-      <p className="text-gray-500 text-left w-full mb-4">Discover our top categories and trending products, including the latest in hair styling tools!</p>
+      {/* New: Categories section at the top */}
+      {products.length > 0 && (
+        <div className="w-full mb-10">
+          <h2 className="text-2xl font-semibold text-orange-600 mb-3">Categories</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            {Array.from(
+              products.reduce((acc, product) => {
+                if (!acc.has(product.category)) acc.set(product.category, product);
+                return acc;
+              }, new Map())
+            ).map(([category, product]) => (
+              <div
+                key={category}
+                className="cursor-pointer bg-white rounded-lg shadow p-3 flex flex-col items-center hover:shadow-lg transition max-w-[200px] w-full"
+                onClick={() => router.push(`/all-products?category=${encodeURIComponent(category)}`)}
+              >
+                <div className="w-full flex-1 flex items-center justify-center mb-2">
+                  <Image
+                    src={product.image[0]}
+                    alt={category}
+                    width={160}
+                    height={160}
+                    className="rounded object-cover h-32 w-32"
+                  />
+                </div>
+                <p className="font-semibold text-base text-center mb-2 text-orange-600 truncate w-full">{category}</p>
+                <button
+                  className="mt-auto px-4 py-2 bg-orange-600 text-white rounded-full text-sm hover:bg-orange-700 transition w-full"
+                  onClick={e => {
+                    e.stopPropagation();
+                    router.push(`/all-products?category=${encodeURIComponent(category)}`);
+                  }}
+                >
+                  See More
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-      {/* Category Grouped Products */}
+      {/* Restore: Category Grouped Products as before */}
       {products.length > 0 ? (
         Array.from(
           products.reduce((acc, product) => {
@@ -48,7 +84,7 @@ const HomeProducts = () => {
           <div key={category} className="w-full mb-10">
             <h2 className="text-xl font-semibold text-orange-600 mb-3">{category}</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {prods.slice(0, 5).map((product, index) => (
+              {prods.map((product, index) => (
                 <ProductCard key={index} product={product} />
               ))}
             </div>
@@ -77,13 +113,6 @@ const HomeProducts = () => {
           ))}
         </div>
       )}
-      {/* See More Button */}
-      <button
-        onClick={() => router.push('/all-products')}
-        className="px-12 py-2.5 border rounded text-gray-500/70 hover:bg-slate-50/90 transition"
-      >
-        See more
-      </button>
     </div>
   );
 };

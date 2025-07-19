@@ -8,7 +8,7 @@ const outfit = Outfit({ subsets: ['latin'], weight: ["300", "400", "500"] })
 
 export const metadata = {
   title: "HMElectronics",
-  description: "E-Commerce with Next.js ",
+  description: "HMElectronics is a well updated online shopping in Pakistan. HmElectronics offers a variety of electric products such as Kitchen Appliances, Irons and heaters, Hairs dryers and straightners, trimmers, hair products, and more",
 };
 
 

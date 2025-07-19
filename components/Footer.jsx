@@ -89,7 +89,7 @@ const Footer = () => {
               <motion.div variants={mailVariants} animate="animate">
                 <Mail size={18} className="text-[#EA580C]" />
               </motion.div>
-              <span>abdullah16safdar@gmail.com</span>
+              <span>hmelectronics.shop@gmail.com</span>
             </div>
           </div>
         </div>

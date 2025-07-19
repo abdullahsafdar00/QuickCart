@@ -9,6 +9,7 @@ import { useClerk, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import { ContactIcon, PaintbrushVerticalIcon, Menu, X } from "lucide-react";
 import { ShoppingBagIcon } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 const containerVariants = {
   hidden: {},
@@ -29,6 +30,16 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showCategorySlider, setShowCategorySlider] = useState(false);
+
+  // Get unique categories from products
+  const categories = Array.from(new Set(products.map((p) => p.category))).filter(Boolean);
+
+  // Filter products by selected category
+  const categoryProducts = selectedCategory
+    ? products.filter((p) => p.category === selectedCategory)
+    : [];
 
   useEffect(() => {
     if (searchTerm.trim() === "") {
@@ -44,11 +55,7 @@ const Navbar = () => {
   const navLinks = [
     { label: "Home", href: "/", icon: <HomeIcon /> },
     { label: "All Products", href: "/all-products", icon: <ShoppingBagIcon/> },
-    { label: "My Cart", href: "/cart", icon: <CartIcon /> },
     { label: "My Orders", href: "/my-orders", icon: <BagIcon /> },
-    { label: "About", href: "/about-us", icon: <HomeIcon /> },
-    { label: "Contact", href: "/contact-us", icon: <ContactIcon /> },
-    { label: "Privacy Policy", href: "/privacy-policy", icon: <PaintbrushVerticalIcon /> }
   ];
 
   return (
@@ -164,6 +171,22 @@ const Navbar = () => {
                 <span>{label}</span>
               </button>
             ))}
+            <hr className="my-2 border-gray-200" />
+            <div className="flex flex-col gap-2">
+              <span className="font-semibold text-gray-600">Categories</span>
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    router.push(`/all-products?category=${encodeURIComponent(cat)}`);
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-left px-2 py-1 rounded hover:bg-orange-50 text-gray-700"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </motion.nav>

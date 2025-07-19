@@ -5,9 +5,26 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAppContext } from "@/context/AppContext";
 import { motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 
 const AllProducts = () => {
   const { products } = useAppContext();
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams.get("category");
+
+  // Filter products by category if present
+  const filteredProducts = selectedCategory
+    ? products.filter((p) => p.category === selectedCategory)
+    : products;
+
+  // Group by category
+  const grouped = Array.from(
+    filteredProducts.reduce((acc, product) => {
+      if (!acc.has(product.category)) acc.set(product.category, []);
+      acc.get(product.category).push(product);
+      return acc;
+    }, new Map())
+  );
 
   return (
     <>
@@ -20,20 +37,22 @@ const AllProducts = () => {
       >
         {/* Heading */}
         <div className="flex flex-col items-start w-full">
-          <h1 className="text-3xl text-gray-800">All <span className="text-[#EA580C]"> Products</span></h1>
-          <div className="w-16 h-1 mt-2 bg-orange-600 rounded-full" />
+          <h1 className="text-3xl text-gray-800">
+            {selectedCategory ? (
+              <>
+                {selectedCategory} <span className="text-[#EA580C]">Products</span>
+              </>
+            ) : (
+              <>All <span className="text-[#EA580C]"> Products</span></>
+            )}
+          </h1>
+          <div className="w-16 h-1 mt-2 bg-orange-600 rounded-full mb-10" />
         </div>
 
         {/* Grid */}
-        <p className="text-gray-500 text-left w-full mb-4">Tip: Click on a category heading to quickly filter products by that category!</p>
-        {products.length > 0 ? (
-          Array.from(
-            products.reduce((acc, product) => {
-              if (!acc.has(product.category)) acc.set(product.category, []);
-              acc.get(product.category).push(product);
-              return acc;
-            }, new Map())
-          ).map(([category, prods]) => (
+        
+        {filteredProducts.length > 0 ? (
+          grouped.map(([category, prods]) => (
             <div key={category} className="w-full mb-10">
               <h2 className="text-xl font-semibold text-orange-600 mb-3 cursor-pointer hover:underline" onClick={() => {
                 const el = document.getElementById(`cat-${category}`);
