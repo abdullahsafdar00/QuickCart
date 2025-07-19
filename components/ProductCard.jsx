@@ -63,15 +63,15 @@ const ProductCard = ({ product }) => {
         </button>
       </div>
 
-      <p className="md:text-base font-medium pt-2 w-full truncate">{product.name}</p>
+      <p className="md:text-lg text-base font-semibold pt-2 w-full truncate leading-tight text-gray-800">{product.name}</p>
       {!product.inStock && (
         <span className="text-xs text-red-600 mt-1">Out of Stock</span>
       )}
-       <p className="w-full text-xs text-gray-500/70 max-sm:hidden truncate">
+      <p className="w-full text-xs md:text-sm text-gray-500/80 max-sm:hidden truncate leading-snug">
         {product.description}
       </p>
-      <div className="flex items-center gap-2">
-        <p className="text-xs">4.5</p>
+      <div className="flex items-center gap-2 mt-1">
+        <p className="text-xs md:text-sm">4.5</p>
         <div className="flex items-center gap-0.5">
           {Array.from({ length: 5 }).map((_, index) => (
             <Image
@@ -86,12 +86,15 @@ const ProductCard = ({ product }) => {
           ))}
         </div>
       </div>
-
-      <div className="flex items-end justify-between w-full mt-1">
-        <p className="text-base font-medium">
-          {currency}
-          {product.offerPrice}
-        </p>
+      <div className="flex items-end justify-between w-full mt-2">
+        {product.offerPrice && product.offerPrice > 0 ? (
+          <div className="flex flex-col">
+            <span className="text-xs md:text-sm text-gray-400 line-through">{currency}{product.price}</span>
+            <span className="text-lg md:text-xl font-bold text-orange-600">{currency}{product.offerPrice}</span>
+          </div>
+        ) : (
+          <span className="text-lg md:text-xl font-bold text-gray-800">{currency}{product.price}</span>
+        )}
         <motion.button
           animate={{ scale: [1, 1.3, 1] }}
           transition={{
@@ -100,7 +103,7 @@ const ProductCard = ({ product }) => {
             repeatType: 'loop',
             ease: 'easeInOut',
           }}
-          className="max-sm:hidden px-4 py-1.5 text-[#EA580C] border border-gray-500/20 rounded-full text-xs hover:bg-slate-50 transition"
+          className="px-4 py-1.5 text-[#EA580C] border border-gray-500/20 rounded-full text-xs md:text-sm hover:bg-slate-50 transition font-semibold"
         >
           Buy now
         </motion.button>

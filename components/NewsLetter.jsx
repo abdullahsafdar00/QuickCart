@@ -55,10 +55,10 @@ const NewsLetter = () => {
     <motion.div  initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }} className="flex flex-col items-center justify-center text-center space-y-2 pt-8 pb-14">
-      <h1 className="md:text-4xl text-2xl font-medium">
+      <h1 className="md:text-4xl text-2xl font-bold tracking-tight text-gray-800">
         Subscribe now & get latest updates
       </h1>
-      <p className="md:text-base text-gray-500/80 pb-8">
+      <p className="md:text-lg text-base text-gray-500/80 pb-8 font-medium">
         Sign up to get the latest deals, offers, and tech drops.
       </p>
 
@@ -72,11 +72,11 @@ const NewsLetter = () => {
           required
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email id"
-          className="border border-gray-500/30 rounded-md h-full border-r-0 outline-none w-full rounded-r-none px-3 text-gray-500"
+          className="border border-gray-500/30 rounded-md h-full border-r-0 outline-none w-full rounded-r-none px-3 text-gray-500 text-base md:text-lg"
         />
         <button
           type="submit"
-          className="md:px-12 px-8 h-full text-white bg-orange-600 rounded-md rounded-l-none"
+          className="md:px-12 px-8 h-full text-white bg-orange-600 rounded-md rounded-l-none text-base md:text-lg font-semibold"
         >
           {status === "loading" ?  <span className="flex space-x-1">
     <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />

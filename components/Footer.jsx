@@ -41,7 +41,7 @@ const Footer = () => {
         <div className="w-full md:w-1/3 space-y-5">
           <h1
             onClick={() => router.push("/")}
-            className="cursor-pointer text-3xl text-gray-800"
+            className="cursor-pointer text-3xl md:text-4xl font-extrabold text-gray-800 tracking-tight"
           >
             <span className="text-[#EA580C]">HM</span>Electronics
           </h1>
@@ -54,7 +54,7 @@ const Footer = () => {
 
         {/* Quick Links */}
         <div className="w-full md:w-1/3 space-y-5">
-          <h2 className="text-lg font-semibold text-gray-800">Quick Links</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">Quick Links</h2>
           <ul className="text-sm space-y-2">
             {[
               { label: "Home", href: "/" },
@@ -66,7 +66,7 @@ const Footer = () => {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="hover:text-[#EA580C] transition-colors duration-200"
+                  className="hover:text-[#EA580C] transition-colors duration-200 text-base md:text-lg font-medium"
                 >
                   {link.label}
                 </Link>
@@ -77,19 +77,19 @@ const Footer = () => {
 
         {/* Contact */}
         <div className="w-full md:w-1/3 space-y-5">
-          <h2 className="text-lg font-semibold text-gray-800">Get in Touch</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-800 tracking-tight">Get in Touch</h2>
           <div className="space-y-3 text-sm">
             <div className="flex items-center gap-2">
               <motion.div variants={phoneVariants} animate="animate">
                 <Phone size={18} className="text-[#EA580C]" />
               </motion.div>
-              <span>+92-3040505905</span>
+              <span className="text-base md:text-lg font-medium">+92-3040505905</span>
             </div>
             <div className="flex items-center gap-2">
               <motion.div variants={mailVariants} animate="animate">
                 <Mail size={18} className="text-[#EA580C]" />
               </motion.div>
-              <span>hmelectronics.shop@gmail.com</span>
+              <span className="text-base md:text-lg font-medium">hmelectronics.shop@gmail.com</span>
             </div>
           </div>
         </div>
