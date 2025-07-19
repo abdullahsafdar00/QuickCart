@@ -11,7 +11,7 @@ import toast from "react-hot-toast";
 
 const Orders = () => {
 
-    const { currency, getToken, user, router } = useAppContext();
+    const { currency, getToken, user, router, getCartAmount } = useAppContext();
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -96,7 +96,7 @@ const Orders = () => {
             {/* Amount */}
             <div className="text-black font-semibold my-auto sm:text-right">
               {currency}
-              {order.amount}
+              {getCartAmount() + Math.floor(getCartAmount() * 0.02)}
             </div>
 
             {/* Meta Info */}
