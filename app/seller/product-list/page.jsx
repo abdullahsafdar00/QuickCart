@@ -108,7 +108,6 @@ const ProductList = () => {
           <thead className="text-gray-900 text-sm text-left">
             <tr>
               <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium">Product</th>
-              <th className="w-2/3 md:w-2/5 px-4 py-3 font-medium">Title</th>
               <th className="px-4 py-3 font-medium">Category</th>
               <th className="px-4 py-3 font-medium">Price</th>
               <th className="px-4 py-3 font-medium">Action</th>
@@ -127,7 +126,7 @@ const ProductList = () => {
                     width={64}
                     height={64}
                   />
-                  <span className="truncate px-20 py-3">{product.name}</span>
+                  <span className="truncate">{product.name}</span>
                 </td>
                 <td className="px-4 py-3">{product.category}</td>
                 <td className="px-4 py-3">{product.offerPrice > 0 ? product.offerPrice : product.price}</td>
