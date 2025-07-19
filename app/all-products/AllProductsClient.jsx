@@ -33,7 +33,7 @@ const AllProductsClient = () => {
     >
       {/* Heading */}
       <div className="flex flex-col items-start w-full">
-        <h1 className="text-3xl text-gray-800">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 tracking-tight">
           {selectedCategory ? (
             <>
               {selectedCategory} <span className="text-[#EA580C]">Products</span>
@@ -46,13 +46,12 @@ const AllProductsClient = () => {
         </h1>
         <div className="w-16 h-1 mt-2 bg-orange-600 rounded-full mb-10" />
       </div>
-
       {/* Grid */}
       {filteredProducts.length > 0 ? (
         grouped.map(([category, prods]) => (
           <div key={category} className="w-full mb-10">
             <h2
-              className="text-xl font-semibold text-orange-600 mb-3 cursor-pointer hover:underline"
+              className="text-xl md:text-2xl font-semibold text-orange-600 mb-3 cursor-pointer hover:underline tracking-tight"
               onClick={() => {
                 const el = document.getElementById(`cat-${category}`);
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -79,14 +78,12 @@ const AllProductsClient = () => {
             >
               {/* Image placeholder */}
               <div className="h-40 sm:h-48 md:h-56 bg-gray-300 rounded-t-xl" />
-
               {/* Content placeholder */}
               <div className="p-4 flex flex-col gap-2">
                 <div className="h-4 bg-gray-300 rounded w-3/4" />
                 <div className="h-3 bg-gray-300 rounded w-1/2" />
                 <div className="h-3 bg-gray-300 rounded w-2/3" />
               </div>
-
               {/* Button placeholder */}
               <div className="p-4 pt-0">
                 <div className="h-8 lg:ml-24 bg-gray-300 rounded-md w-1/2 mx-auto" />

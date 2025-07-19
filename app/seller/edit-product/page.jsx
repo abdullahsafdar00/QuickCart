@@ -132,10 +132,6 @@ async function uploadToCloudinary(file) {
       toast.error('Please enter a valid price');
       return false;
     }
-    if (offerPrice && (isNaN(Number(offerPrice)) || Number(offerPrice) < 0)) {
-      toast.error('Please enter a valid offer price');
-      return false;
-    }
     if (imageUrls.length === 0 && files.filter(f => f).length === 0) {
       toast.error('At least one product image is required');
       return false;
@@ -202,11 +198,7 @@ async function uploadToCloudinary(file) {
   };
 
   if (!user) {
-    return (
-      <div className="flex-1 min-h-screen flex items-center justify-center">
-        <p>Please log in to edit products.</p>
-      </div>
-    );
+    router.push('/access-denied')
   }
 
   return (

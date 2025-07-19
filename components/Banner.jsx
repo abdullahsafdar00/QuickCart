@@ -17,10 +17,10 @@ const Banner = () => {
         alt="jbl_soundbox_image"
       />
       <div className="flex flex-col items-center justify-center text-center space-y-2 px-4 md:px-0">
-        <h2 className="text-2xl md:text-3xl max-w-[320px]">
+        <h2 className="text-2xl md:text-4xl font-bold text-gray-800 tracking-tight max-w-[320px]">
           Level Up Your Gaming <span className="text-[#EA580C]">Experience</span>
         </h2>
-        <p className="max-w-[343px] font-medium text-gray-800/60">
+        <p className="max-w-[343px] font-medium text-gray-800/60 text-base md:text-lg leading-relaxed">
           From immersive sound to precise controls—everything you need to win
         </p>
         <motion.button animate={{
@@ -31,7 +31,7 @@ const Banner = () => {
       repeatDelay: 0.3,
       ease: "easeInOut",
     },
-  }} className="group flex items-center justify-center gap-1 px-6 py-2.5 bg-orange-600 rounded text-white">
+  }} className="group flex items-center justify-center gap-1 px-6 py-2.5 bg-orange-600 rounded text-white text-base md:text-lg font-semibold">
           <p>Buy Now</p>
           <Image className="group-hover:translate-x-1 transition" src={assets.arrow_icon_white} alt="arrow_icon_white" />
         </motion.button>

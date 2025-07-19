@@ -173,9 +173,8 @@ const AddProduct = () => {
               onChange={(e) => setCategory(e.target.value)}
               defaultValue={category}
             >
-              <option value="Earphone">Earphone</option>
+              <option value="Earphone">Accessories</option>
               <option value="Headphone">Irons & Steamers</option>
-              <option value="Watch">Watch</option>
               <option value="Camera">Body Massager</option>
               <option value="Accessories">Kitchen Appliances</option>
               <option value="Hair Straighteners">Beauty products and tools</option>
