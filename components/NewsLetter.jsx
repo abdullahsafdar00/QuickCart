@@ -56,7 +56,7 @@ const NewsLetter = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }} className="flex flex-col items-center justify-center text-center space-y-2 pt-8 pb-14">
       <h1 className="md:text-4xl text-2xl font-medium">
-        Subscribe now & get 20% off
+        Subscribe now & get latest updates
       </h1>
       <p className="md:text-base text-gray-500/80 pb-8">
         Sign up to get the latest deals, offers, and tech drops.

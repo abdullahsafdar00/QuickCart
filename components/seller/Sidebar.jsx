@@ -10,6 +10,7 @@ const SideBar = () => {
     const menuItems = [
         { name: 'Add Product', path: '/seller', icon: assets.add_icon },
         { name: 'Product List', path: '/seller/product-list', icon: assets.product_list_icon },
+        { name: 'Edit Product', path: '/seller/edit-product', icon: assets.product_list_icon },
         { name: 'Orders', path: '/seller/orders', icon: assets.order_icon },
          { name: 'NewsLetter', path: '/seller/newsletter', icon: assets.add_icon },
 

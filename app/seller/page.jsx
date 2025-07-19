@@ -203,11 +203,9 @@ const AddProduct = () => {
               id="offer-price"
               type="number"
               placeholder="0"
-              formNoValidate
               className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40"
               onChange={(e) => setOfferPrice(e.target.value)}
               value={offerPrice}
-              required
             />
           </div>
         </div>
