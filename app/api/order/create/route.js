@@ -22,11 +22,19 @@ export async function POST(request) {
       const product = await Product.findById(item.product);
       if (!product) continue;
 
-      amount += product.offerPrice * item.quantity;
+      // Use offerPrice if available and > 0, else fallback to price
+      const unitPrice = (product.offerPrice && product.offerPrice > 0) ? product.offerPrice : product.price;
+      amount += unitPrice * item.quantity;
+
+      // For email: show both prices if discounted
+      let priceHtml = `PKR${unitPrice}`;
+      if (product.offerPrice && product.offerPrice > 0 && product.offerPrice < product.price) {
+        priceHtml = `<span style='color:#888;text-decoration:line-through;'>PKR${product.price}</span> <span style='color:#EA580C;font-weight:bold;'>PKR${product.offerPrice}</span>`;
+      }
 
       itemDetails.push({
         name: product.name,
-        price: `PKR${product.offerPrice}`,
+        price: priceHtml,
         quantity: item.quantity,
       });
     }
@@ -66,7 +74,7 @@ export async function POST(request) {
     const orderDetailsHtml = `
       <h2>🧾 Order Summary</h2>
       <p><strong>Email:</strong> ${user.email}</p>
-      <p><strong>Total:</strong> ₹${totalAmount}</p>
+      <p><strong>Total:</strong> PKR${totalAmount}</p>
       <p><strong>Shipping:</strong> ${address}</p>
       <ul>${itemsHtml}</ul>
     `;

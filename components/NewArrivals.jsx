@@ -13,10 +13,12 @@ function chunkArray(arr, size) {
 const NewArrivals = () => {
   const { products } = useAppContext();
   const now = Date.now();
-  const newArrivals = products.filter(p => {
-    const productDate = new Date(p.date).getTime();
-    return now - productDate <= 48 * 60 * 60 * 1000;
-  });
+  const newArrivals = products
+    .filter(p => {
+      const productDate = new Date(p.date).getTime();
+      return now - productDate < 48 * 60 * 60 * 1000; // strictly less than 48 hours
+    })
+    .sort((a, b) => new Date(b.date) - new Date(a.date)); // newest first
   if (newArrivals.length === 0) return null;
 
   // For desktop/tablet: chunk into slides of 2 rows (e.g., 5 per row, so 10 per slide)
