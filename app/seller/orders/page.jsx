@@ -95,7 +95,7 @@ const Orders = () => {
 
             {/* Amount */}
             <div className="text-black font-semibold my-auto sm:text-right">
-              {currency}{getCartAmount()}
+              {currency}{order.amount}
             </div>
 
             {/* Meta Info */}
