@@ -74,7 +74,7 @@ export async function POST(request) {
     const orderDetailsHtml = `
       <h2> Order Summary</h2>
       <p><strong>Email:</strong> ${user.email}</p>
-      <p><strong>Total:</strong> ${totalAmount}</p>
+      <p><strong>Total:</strong> PKR ${totalAmount}</p>
       <p><strong>Shipping:</strong> ${address}</p>
       <ul>${itemsHtml}</ul>
     `;
