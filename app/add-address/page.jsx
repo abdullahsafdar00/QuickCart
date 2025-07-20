@@ -72,7 +72,7 @@ const AddAddress = () => {
                         <input
                             className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
                             type="text"
-                            placeholder="Pin code"
+                            placeholder="Pin code (optional)"
                             onChange={(e) => setAddress({ ...address, pinCode: e.target.value })}
                             value={address.pinCode}
                         />

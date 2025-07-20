@@ -5,6 +5,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import { SignInButton } from '@clerk/nextjs';
 
 const OrderSummary = () => {
 
@@ -87,6 +88,16 @@ const OrderSummary = () => {
         Order Summary
       </h2>
       <hr className="border-gray-500/30 my-5" />
+      <>
+      { !user ? (
+        <div className="flex flex-col items-center justify-center space-y-6 py-8">
+          <p className="text-gray-700 text-center text-base">To place your order, please sign in with Google. This helps us keep your orders secure and lets you track your purchases easily.</p>
+          <SignInButton mode="modal" provider="google">
+            <button className="w-full bg-orange-600 h-12 text-white py-3 mt-2 hover:bg-orange-700 rounded-md text-lg font-medium">Continue with Google</button>
+          </SignInButton>
+        </div>
+      ) : (
+      <>
       <div className="space-y-6">
         <div>
           <label className="text-base font-medium uppercase text-gray-600 block mb-2">
@@ -166,6 +177,9 @@ const OrderSummary = () => {
     <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce" />
   </span> : "Place Order"}
         </button>
+      </>
+      )}
+      </>
     </motion.div>
   );
 };
