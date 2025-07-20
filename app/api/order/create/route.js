@@ -23,7 +23,7 @@ export async function POST(request) {
       if (!product) continue;
 
       // Use offerPrice if available and > 0, else fallback to price
-      const unitPrice = (product.offerPrice && product.offerPrice > 0) ? product.offerPrice : product.price;
+      const unitPrice = product.offerPrice > 0 ? product.offerPrice : product.price;
       amount += unitPrice * item.quantity;
 
       // For email: show both prices if discounted
@@ -72,9 +72,9 @@ export async function POST(request) {
     ).join("");
 
     const orderDetailsHtml = `
-      <h2>🧾 Order Summary</h2>
+      <h2> Order Summary</h2>
       <p><strong>Email:</strong> ${user.email}</p>
-      <p><strong>Total:</strong> PKR${totalAmount}</p>
+      <p><strong>Total:</strong> ${totalAmount}</p>
       <p><strong>Shipping:</strong> ${address}</p>
       <ul>${itemsHtml}</ul>
     `;
