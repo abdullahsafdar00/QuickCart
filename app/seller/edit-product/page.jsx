@@ -334,12 +334,11 @@ async function uploadToCloudinary(file) {
                   value={category} 
                   onChange={e => setCategory(e.target.value)}
                 >
-                  <option value="Earphone">Earphone</option>
-                  <option value="Headphone">Irons & Steamers</option>
-                  <option value="Watch">Watch</option>
-                  <option value="Camera">Body Massager</option>
-                  <option value="Accessories">Kitchen Appliances</option>
-                  <option value="Hair Straighteners">Beauty products and tools</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Irons & Steamers">Irons & Steamers</option>
+              <option value="Body Massager">Body Massager</option>
+              <option value="Kitchen Appliances">Kitchen Appliances</option>
+              <option value="Beauty products and tools">Beauty products and tools</option>
                 </select>
               </div>
 
