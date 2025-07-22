@@ -173,11 +173,11 @@ const AddProduct = () => {
               onChange={(e) => setCategory(e.target.value)}
               defaultValue={category}
             >
-              <option value="Earphone">Accessories</option>
-              <option value="Headphone">Irons & Steamers</option>
-              <option value="Camera">Body Massager</option>
-              <option value="Accessories">Kitchen Appliances</option>
-              <option value="Hair Straighteners">Beauty products and tools</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Irons & Steamers">Irons & Steamers</option>
+              <option value="Body Massager">Body Massager</option>
+              <option value="Kitchen Appliances">Kitchen Appliances</option>
+              <option value="Beauty products and tools">Beauty products and tools</option>
             </select>
           </div>
           <div className="flex flex-col gap-1 w-32">

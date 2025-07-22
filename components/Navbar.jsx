@@ -8,7 +8,6 @@ import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
 import {  Menu, X, ChevronDown, ShoppingBagIcon } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
 
 const containerVariants = {
   hidden: {},
