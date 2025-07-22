@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Promotions from "@/components/Promotions";
 import NewArrivals from "@/components/NewArrivals";
+import FeaturedProduct from "@/components/FeaturedProduct";
 
 const Home = () => {
   return (
@@ -15,9 +16,10 @@ const Home = () => {
       <Navbar/>
       <div className="px-6 md:px-16 lg:px-32">
         <HeaderSlider />
-        
-        <HomeProducts />
         <Promotions />
+        <HomeProducts />
+        
+        <FeaturedProduct/>
         <Banner />
         <NewsLetter />
       </div>
