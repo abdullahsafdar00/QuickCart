@@ -7,6 +7,12 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import { SignInButton } from '@clerk/nextjs';
 
+const COURIERS = [
+  { name: "M&P", value: "mnp" },
+  { name: "Trax", value: "trax" },
+  { name: "Leopard", value: "leopard" },
+];
+
 const OrderSummary = () => {
 
 
@@ -14,6 +20,8 @@ const OrderSummary = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [status, setStatus] = useState("")
+  const [selectedCourier, setSelectedCourier] = useState(null);
+  const [autoSuggestedCourier, setAutoSuggestedCourier] = useState(null);
 
   const [userAddresses, setUserAddresses] = useState([]);
 
@@ -41,11 +49,24 @@ const OrderSummary = () => {
     setIsDropdownOpen(false);
   };
 
+  // Auto-suggest best courier based on city (extra value)
+  useEffect(() => {
+    if (selectedAddress) {
+      const city = selectedAddress.city?.toLowerCase() || "";
+      if (city.includes("karachi")) setAutoSuggestedCourier("mnp");
+      else if (city.includes("lahore")) setAutoSuggestedCourier("leopard");
+      else setAutoSuggestedCourier("trax");
+    }
+  }, [selectedAddress]);
+
   const createOrder = async () => {
     setStatus("loading")
     try {
       if (!selectedAddress) {
         return toast.error("Please select an address")
+      }
+      if (!selectedCourier) {
+        return toast.error("Please select a courier service")
       }
 
       let cartItemsArray = Object.keys(cartItems).map((key)=>({product: key, quantity: cartItems[key]}))
@@ -59,7 +80,7 @@ const OrderSummary = () => {
       const token = await getToken();
       
 
-      const { data } = await axios.post('/api/order/create', {address: selectedAddress._id, items: cartItemsArray}, {headers: {Authorization: `Bearer ${token}`}})
+      const { data } = await axios.post('/api/order/create', {address: selectedAddress._id, items: cartItemsArray, courierName: selectedCourier}, {headers: {Authorization: `Bearer ${token}`}})
 
       if (data.success) {
         toast.success(data.message)
@@ -139,6 +160,24 @@ const OrderSummary = () => {
                 </li>
               </ul>
             )}
+          </div>
+        </div>
+        {/* Courier Selection */}
+        <div>
+          <label className="text-base font-medium uppercase text-gray-600 block mb-2">
+            Select Courier Service
+          </label>
+          <div className="relative inline-block w-full text-sm border">
+            <select
+              className="w-full px-4 py-2 bg-white text-gray-700 focus:outline-none"
+              value={selectedCourier || autoSuggestedCourier || ""}
+              onChange={e => setSelectedCourier(e.target.value)}
+            >
+              <option value="" disabled>Select a courier</option>
+              {COURIERS.map(courier => (
+                <option key={courier.value} value={courier.value}>{courier.name}{autoSuggestedCourier === courier.value ? " (Recommended)" : ""}</option>
+              ))}
+            </select>
           </div>
         </div>
 

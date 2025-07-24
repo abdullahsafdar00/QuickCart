@@ -34,3 +34,23 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Courier Integration (M&P, Trax, Leopard)
+
+### How it Works
+- At checkout, users can select a courier (M&P, Trax, Leopard).
+- The backend books the shipment (mocked for now) and stores tracking info in the order.
+- Users and sellers can view courier and tracking info in their order history.
+- The system auto-suggests the best courier based on city (extra value).
+
+### How to Test
+- Place an order via the UI, select a courier, and complete checkout.
+- Check the order in "My Orders" and "Seller Orders" for courier and tracking info.
+- To run backend tests: `npm test` (Jest)
+
+### How to Integrate Real Courier APIs
+- Replace the mock courier booking logic in `app/api/order/create/route.js` with real API calls.
+- Store API credentials securely (e.g., in environment variables).
+- Update the frontend to display real-time tracking info if available.
+
+For more details, see code comments in the relevant files.

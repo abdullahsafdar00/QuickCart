@@ -9,7 +9,8 @@
     image: {type: Array, required:true},
     category: {type: String, required:true},
     date: {type: Date, required:true},
-    inStock: { type: Boolean, default: true }
+    inStock: { type: Boolean, default: true },
+    promotion: { type: Boolean, default: false },
 
  })
 

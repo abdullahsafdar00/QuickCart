@@ -4,7 +4,7 @@ import ProductCard from "./ProductCard";
 
 const Promotions = () => {
   const { products } = useAppContext();
-  const promoProducts = products.filter(p => p.offerPrice && p.offerPrice > 0);
+   const promoProducts = products.filter(p => p.promotion);
   if (promoProducts.length === 0) return null;
   return (
     <section className="w-full my-12">

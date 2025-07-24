@@ -59,6 +59,30 @@ const ProductList = () => {
     }
   };
 
+  // Toggle promotion status
+  const handleTogglePromotion = async (productId, newStatus) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.put(
+        "/api/product/promotion",
+        { productId, promotion: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (data.success) {
+        toast.success("Promotion status updated");
+        setProducts((prev) =>
+          prev.map((p) =>
+            p._id === productId ? { ...p, promotion: newStatus } : p
+          )
+        );
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   const handleDelete = async (productId) => {
     try {
       const token = await getToken();
@@ -125,6 +149,7 @@ const ProductList = () => {
                   <th className="px-4 py-3 font-medium">Price</th>
                   <th className="px-4 py-3 font-medium">Action</th>
                   <th className="px-4 py-3 font-medium">In Stock</th>
+                  <th className="px-4 py-3 font-medium">Promotion</th>
                   <th className="px-4 py-3 font-medium">Delete</th>
                 </tr>
               </thead>
@@ -172,11 +197,21 @@ const ProductList = () => {
                     </td>
                     <td className="px-4 py-3">
                       <button
-                        onClick={() => openDeleteModal(product._id)}
-                        className="text-red-600 hover:underline text-sm"
+                        onClick={() => handleTogglePromotion(product._id, !product.promotion)}
+                        className={`inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                          product.promotion ? "bg-[#EA580C]" : "bg-gray-300"
+                        }`}
+                        aria-label="Toggle Promotion"
                       >
-                        Remove
+                        <span
+                          className={`inline-block h-4 w-4 transform bg-white rounded-full transition-transform ${
+                            product.promotion ? "translate-x-6" : "translate-x-1"
+                          }`}
+                        />
                       </button>
+                      <span className="text-xs text-gray-500 ml-2">
+                        {product.promotion ? "Promotion" : "No Promotion"}
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -243,6 +278,27 @@ const ProductList = () => {
                         {product.inStock ? "In Stock" : "Out of Stock"}
                       </span>
                     </div>
+
+                    <div className="flex flex-col items-center gap-1">
+                      <button
+                        onClick={() => handleTogglePromotion(product._id, !product.promotion)}
+                        className={`inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-colors ${
+                          product.promotion ? "bg-[#EA580C]" : "bg-gray-300"
+                        }`}
+                        aria-label="Toggle Promotion"
+                      >
+                        <span
+                          className={`inline-block h-3 w-3 sm:h-4 sm:w-4 transform bg-white rounded-full transition-transform ${
+                            product.promotion ? "translate-x-5 sm:translate-x-6" : "translate-x-1"
+                          }`}
+                        />
+                      </button>
+                      <span className="text-xs text-gray-500">
+                        {product.promotion ? "In Promotion" : "Out of Promotion"}
+                      </span>
+                    </div>
+
+                    
                     
                     <button
                       onClick={() => openDeleteModal(product._id)}

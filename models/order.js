@@ -9,7 +9,12 @@ const orderSchema = new mongoose.Schema({
     amount: {type: Number, required: true},
     address: {type: String, required: true, ref: "address"},
     status: {type: String, required: true, default: "Order Placed"},
-    date: {type: Date, required: true}
+    date: {type: Date, required: true},
+    courierName: {type: String, default: null},
+    courierTrackingNumber: {type: String, default: null},
+    courierStatus: {type: String, default: null},
+    courierMeta: {type: Object, default: {}}
+    
 })
 
 const Order = mongoose.models.order || mongoose.model('order', orderSchema)
