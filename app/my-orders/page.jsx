@@ -75,6 +75,13 @@ const MyOrders = () => {
                                         <br />
                                         <span>{order.address.phoneNumber}</span>
                                     </p>
+                                    {order.courierName && (
+                                      <div className="mt-2 text-xs text-gray-600">
+                                        <span className="font-semibold">Courier:</span> {order.courierName.toUpperCase()}<br/>
+                                        <span className="font-semibold">Tracking #:</span> {order.courierTrackingNumber}<br/>
+                                        <span className="font-semibold">Status:</span> {order.courierStatus || 'N/A'}
+                                      </div>
+                                    )}
                                 </div>
                                 <p className="font-medium my-auto">{currency}{order?.amount}</p>
                                 <div>

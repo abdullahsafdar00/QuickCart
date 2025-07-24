@@ -43,6 +43,12 @@ const ProductCard = ({ product }) => {
       <div
         className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center"
       >
+        {/* Promotion Badge */}
+        {product.promotion && (
+          <span className="absolute top-2 left-2 bg-orange-600 text-white text-xs px-2 py-0.5 rounded-full z-10">
+            Promotion
+          </span>
+        )}
         <Image
           src={product.image[0]}
           alt={product.name}

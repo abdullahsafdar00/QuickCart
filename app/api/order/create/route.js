@@ -8,7 +8,7 @@ import nodemailer from "nodemailer";
 export async function POST(request) {
   try {
     const { userId } = getAuth(request);
-    const { address, items } = await request.json();
+    const { address, items, courierName } = await request.json();
 
     if (!address || items.length === 0) {
       return NextResponse.json({ success: false, message: "No items in the order" });
@@ -41,7 +41,18 @@ export async function POST(request) {
 
     const totalAmount = amount + Math.floor(amount * 0.02); // add 2% fee
 
-    // 2️⃣ Fire Inngest event
+    // 2️⃣ Mock Courier Booking
+    let courierTrackingNumber = null;
+    let courierStatus = 'Booked';
+    let courierMeta = {};
+    if (courierName) {
+      // In real integration, call the courier API here
+      // For now, mock tracking number and meta
+      courierTrackingNumber = `${courierName.toUpperCase()}-${Math.floor(Math.random()*100000000)}`;
+      courierMeta = { bookedAt: new Date().toISOString(), courier: courierName };
+    }
+
+    // 3️⃣ Fire Inngest event
     await inngest.send({
       name: 'order/created',
       data: {
@@ -50,10 +61,14 @@ export async function POST(request) {
         items,
         amount: totalAmount,
         date: Date.now(),
+        courierName,
+        courierTrackingNumber,
+        courierStatus,
+        courierMeta,
       }
     });
 
-    // 3️⃣ Clear cart
+    // 4️⃣ Clear cart
     const user = await User.findById(userId);
     user.cartItems = {};
     await user.save();
@@ -102,7 +117,7 @@ export async function POST(request) {
     });
 
     // ✅ Final response after email
-    return NextResponse.json({ success: true, message: "Order Placed & Emails Sent" });
+    return NextResponse.json({ success: true, message: "Order Placed & Emails Sent", courier: { courierName, courierTrackingNumber, courierStatus } });
 
   } catch (error) {
     console.error("❌ Order Error:", error);
