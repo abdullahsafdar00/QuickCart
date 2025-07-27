@@ -39,7 +39,7 @@ export async function POST(request) {
       });
     }
 
-    const totalAmount = amount + Math.floor(amount * 0.02); // add 2% fee
+    const totalAmount = amount + 250; 
 
     // 2️⃣ Mock Courier Booking
     let courierTrackingNumber = null;

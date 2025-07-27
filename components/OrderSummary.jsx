@@ -110,14 +110,14 @@ const OrderSummary = () => {
       </h2>
       <hr className="border-gray-500/30 my-5" />
       <>
-      { !user ? (
+      {/* { !user ? (
         <div className="flex flex-col items-center justify-center space-y-6 py-8">
           <p className="text-gray-700 text-center text-base">To place your order, please sign in with Google. This helps us keep your orders secure and lets you track your purchases easily.</p>
           <SignInButton mode="modal" provider="google">
             <button className="w-full bg-orange-600 h-12 text-white py-3 mt-2 hover:bg-orange-700 rounded-md text-lg font-medium">Continue with Google</button>
           </SignInButton>
         </div>
-      ) : (
+      ) : ( */}
       <>
       <div className="space-y-6">
         <div>
@@ -190,17 +190,14 @@ const OrderSummary = () => {
             <p className="uppercase text-gray-600">Items {getCartCount()}</p>
             <p className="text-gray-800">{getCartAmount()}</p>
           </div>
+          
           <div className="flex justify-between">
             <p className="text-gray-600">Shipping Fee</p>
-            <p className="font-medium text-gray-800">Free</p>
-          </div>
-          <div className="flex justify-between">
-            <p className="text-gray-600">Tax (2%)</p>
-            <p className="font-medium text-gray-800">{currency}{Math.floor(getCartAmount() * 0.02)}</p>
+            <p className="font-medium text-gray-800">{currency}250</p>
           </div>
           <div className="flex justify-between text-lg md:text-xl font-medium border-t pt-3">
             <p>Total</p>
-            <p>{currency}{getCartAmount() + Math.floor(getCartAmount() * 0.02)}</p>
+            <p>{getCartAmount() ? `${currency}${getCartAmount() + 250}`: 0}</p>
           </div>
         </div>
       </div>
@@ -217,7 +214,7 @@ const OrderSummary = () => {
   </span> : "Place Order"}
         </button>
       </>
-      )}
+      {/* )} */}
       </>
     </motion.div>
   );
