@@ -84,7 +84,7 @@ const Product = () => {
                         </div>
                         <p>(4.5)</p>
                     </div>
-                    <p className="text-gray-600 mt-3">
+                    <p className="text-gray-600 mt-3"  style={{ whiteSpace: 'pre-line' }}>
                         {productData.description}
                     </p>
                     <p className="text-3xl font-medium mt-6">

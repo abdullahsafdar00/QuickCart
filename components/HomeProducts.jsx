@@ -5,14 +5,6 @@ import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import NewArrivals from "./NewArrivals";
 
-const chunkArray = (arr, size) => {
-  const result = [];
-  for (let i = 0; i < arr.length; i += size) {
-    result.push(arr.slice(i, i + size));
-  }
-  return result;
-};
-
 const HomeProducts = () => {
   const { products, router } = useAppContext();
 
@@ -20,6 +12,7 @@ const HomeProducts = () => {
     <div className="flex flex-col items-center pt-14">
       <NewArrivals />
       <div className="w-full border-b border-gray-200 my-8" />
+      
       {/* WhatsApp floating icon */}
       <a
         href="https://wa.me/923040505905"
@@ -33,7 +26,7 @@ const HomeProducts = () => {
           <title>WhatsApp</title>
           <path
             fill="#25D366"
-            d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.62-6.003C.122 5.3 5.495 0 12.057 0c3.2 0 6.217 1.246 8.477 3.507a11.821 11.821 0 013.498 8.414c-.003 6.562-5.377 11.935-11.94 11.935a11.9 11.9 0 01-5.606-1.426L.057 24z"
+            d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.62-6.003C.122 5.3 5.495 0 12.057 0c3.2 0 6.217 1.246 8.477 3.507a11.821 11.821 0 013.498 8.414c-.003 6.562-5.377 11.935-11.94 11.935a11.9 0 01-5.606-1.426L.057 24z"
           />
           <path
             fill="#FFF"
@@ -42,7 +35,7 @@ const HomeProducts = () => {
         </svg>
       </a>
 
-      {/* New: Categories section at the top */}
+      {/* Categories section at the top */}
       {products.length > 0 && (
         <div className="w-full mb-10">
           <h2 className="text-2xl font-semibold text-orange-600 mb-3">Categories</h2>
@@ -83,7 +76,7 @@ const HomeProducts = () => {
         </div>
       )}
 
-      {/* Restore: Category Grouped Products as before */}
+      {/* Category Grouped Products */}
       {products.length > 0 ? (
         Array.from(
           products.reduce((acc, product) => {
@@ -92,15 +85,11 @@ const HomeProducts = () => {
             return acc;
           }, new Map())
         ).map(([category, prods]) => {
-          // Slider logic for each category
-          const perRow = 5;
-          const perSlide = perRow * 2;
-          const slides = chunkArray(prods, perSlide);
-          const [current, setCurrent] = useState(0);
           return (
             <div key={category} className="w-full mb-10">
               <h2 className="text-xl font-semibold text-orange-600 mb-3">{category}</h2>
-              {/* Mobile slider: single row */}
+              
+              {/* Mobile: Horizontal scroll slider */}
               <div className="block sm:hidden -mx-4 px-2">
                 <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2">
                   {prods.map((product, idx) => (
@@ -110,38 +99,13 @@ const HomeProducts = () => {
                   ))}
                 </div>
               </div>
-              {/* Tablet/Desktop: two-row slider */}
+
+              {/* Desktop: Static grid (no slider) */}
               <div className="hidden sm:block">
-                <div className="relative">
-                  <div className="flex transition-transform duration-500" style={{ transform: `translateX(-${current * 100}%)` }}>
-                    {slides.map((slide, slideIdx) => (
-                      <div key={slideIdx} className="min-w-full flex flex-col gap-6">
-                        <div className="grid grid-cols-5 gap-6 mb-6">
-                          {slide.slice(0, perRow).map((product, idx) => (
-                            <ProductCard key={idx} product={product} />
-                          ))}
-                        </div>
-                        <div className="grid grid-cols-5 gap-6">
-                          {slide.slice(perRow, perSlide).map((product, idx) => (
-                            <ProductCard key={idx} product={product} />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  {/* Slider controls */}
-                  {slides.length > 1 && (
-                    <div className="flex justify-center gap-2 mt-4">
-                      {slides.map((_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => setCurrent(idx)}
-                          className={`h-2 w-6 rounded-full ${current === idx ? 'bg-orange-600' : 'bg-gray-300'} transition-all`}
-                          aria-label={`Go to slide ${idx + 1}`}
-                        />
-                      ))}
-                    </div>
-                  )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                  {prods.map((product, idx) => (
+                    <ProductCard key={idx} product={product} />
+                  ))}
                 </div>
               </div>
             </div>
@@ -164,7 +128,7 @@ const HomeProducts = () => {
               </div>
               {/* Button Placeholder */}
               <div className="p-4 pt-0">
-                <div className="h-8 lg:ml-24 rounded-md bg-gray-300  w-1/2 mx-auto" />
+                <div className="h-8 lg:ml-24 rounded-md bg-gray-300 w-1/2 mx-auto" />
               </div>
             </div>
           ))}
