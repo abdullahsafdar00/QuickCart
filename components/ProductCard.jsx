@@ -36,7 +36,6 @@ const ProductCard = ({ product }) => {
       whileHover={{ scale: 1.03 }}
       onClick={() => {
         router.push(`/product/${product._id}`);
-        scrollTo(0, 0);
       }}
       className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer"
     >
