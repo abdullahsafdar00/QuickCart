@@ -1,10 +1,11 @@
 
 'use client'
 import React, { useEffect, useState } from "react";
+import { assets } from "@/assets/assets";
+import ClientOnly from "@/components/ClientOnly";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
-import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useUser } from '@clerk/nextjs';
 import { useAppContext } from "@/context/AppContext";
@@ -38,12 +39,7 @@ async function uploadToCloudinary(file) {
   return data.secure_url;
 }
 
-const AddProduct = () => {
-  // Prevent static generation
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  
+function AddProductContent() {
   const { getToken, user, router } = useAppContext();
 
   const [files, setFiles] = useState([]);
@@ -252,6 +248,14 @@ const AddProduct = () => {
       )}
       {/* <Footer /> */}
     </div>
+  );
+}
+
+const AddProduct = () => {
+  return (
+    <ClientOnly>
+      <AddProductContent />
+    </ClientOnly>
   );
 };
 
