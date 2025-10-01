@@ -201,15 +201,19 @@ async function uploadToCloudinary(file) {
     }
   };
 
-  if (!user) {
-    router.push('/access-denied')
-  }
-
   useEffect(() => {
-    if (!user) {
+    if (user === null) {
       router.push('/access-denied');
     }
   }, [user, router]);
+
+  if (user === null) {
+    return (
+      <div className="flex-1 min-h-screen flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">

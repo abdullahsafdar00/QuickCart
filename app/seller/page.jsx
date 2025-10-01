@@ -94,20 +94,26 @@ const AddProduct = () => {
     }
   };
 
- function isAdmin(){
-    if (isLoaded) {
-      const role = user?.publicMetadata?.role;
-      if (role === 'seller') {
-        setIsAuthorized(true);
-      } else {
-        router.replace('/access-denied'); // Optional: create this page
-      }
-    }
- }
-
  useEffect(() => {
-  isAdmin();
- })
+   if (isLoaded && user) {
+     const role = user?.publicMetadata?.role;
+     if (role === 'seller') {
+       setIsAuthorized(true);
+     } else {
+       router.replace('/access-denied');
+     }
+   } else if (isLoaded && !user) {
+     router.replace('/access-denied');
+   }
+ }, [isLoaded, user, router]);
+
+ if (!isLoaded || !isAuthorized) {
+   return (
+     <div className="flex-1 min-h-screen flex items-center justify-center">
+       <div className="text-gray-500">Loading...</div>
+     </div>
+   );
+ }
  
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
