@@ -3,6 +3,9 @@ import authSeller from '@/lib/authSeller';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
+// Force dynamic rendering to prevent static generation
+export const dynamic = 'force-dynamic';
+
 // Seller layout runs on the server and will only render children for sellers.
 export default async function SellerLayout({ children }) {
   const { userId } = getAuth();
