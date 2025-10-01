@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { assets } from "@/assets/assets";
+import ClientOnly from "@/components/ClientOnly";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -12,12 +13,7 @@ import { useUser } from '@clerk/nextjs';
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const Orders = () => {
-    // Prevent static generation
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
+function OrdersContent() {
     const { currency, getToken, user, router, getCartAmount } = useAppContext();
 
     const [orders, setOrders] = useState([]);
@@ -134,6 +130,14 @@ const Orders = () => {
   <Footer />
 </div>
 
+    );
+}
+
+const Orders = () => {
+    return (
+        <ClientOnly>
+            <OrdersContent />
+        </ClientOnly>
     );
 };
 

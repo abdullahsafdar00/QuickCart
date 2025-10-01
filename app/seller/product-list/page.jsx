@@ -1,9 +1,10 @@
 'use client'
 import React, { useEffect, useState } from "react";
+import { assets } from "@/assets/assets";
+import ClientOnly from "@/components/ClientOnly";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
-import { assets } from "@/assets/assets";
 import { useUser } from '@clerk/nextjs';
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
@@ -12,12 +13,7 @@ import Loading from "@/components/Loading";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-const ProductList = () => {
-  // Prevent static generation
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  
+function ProductListContent() {
   const { router, getToken, user } = useAppContext();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -358,6 +354,14 @@ const ProductList = () => {
 
       <Footer />
     </div>
+  );
+}
+
+const ProductList = () => {
+  return (
+    <ClientOnly>
+      <ProductListContent />
+    </ClientOnly>
   );
 };
 

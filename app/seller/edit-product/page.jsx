@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
+import ClientOnly from "@/components/ClientOnly";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -32,12 +33,7 @@ async function uploadToCloudinary(file) {
   return data.secure_url;
 }
 
-export default function EditProduct() {
-  // Prevent static generation
-  if (typeof window === 'undefined') {
-    return null;
-  }
-  
+function EditProductContent() {
   const { getToken, user, router, products, fetchProductData } = useAppContext();
   const [selectedProductId, setSelectedProductId] = useState("");
   const [files, setFiles] = useState([]); // for new uploads
@@ -416,4 +412,12 @@ export default function EditProduct() {
       </div>
     </div>
   );
-};
+}
+
+export default function EditProduct() {
+  return (
+    <ClientOnly>
+      <EditProductContent />
+    </ClientOnly>
+  );
+}
