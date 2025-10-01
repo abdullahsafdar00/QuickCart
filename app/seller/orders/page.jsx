@@ -1,9 +1,9 @@
 'use client'
 import React, { useEffect, useState } from "react";
+import { assets } from "@/assets/assets";
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
-import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/seller/Footer";
@@ -42,18 +42,26 @@ const Orders = () => {
     }
 
     useEffect(() => {
-        if (user) {
-            fetchSellerOrders();
+        if (isLoaded && user) {
+            const role = user?.publicMetadata?.role;
+            if (role === 'seller') {
+                setIsAuthorized(true);
+                fetchSellerOrders();
+            } else {
+                router.replace('/access-denied');
+            }
+        } else if (isLoaded && !user) {
+            router.replace('/access-denied');
         }
-        if (isLoaded) {
-      const role = user?.publicMetadata?.role;
-      if (role === 'seller') {
-        setIsAuthorized(true);
-      } else {
-        router.replace('/access-denied'); // Optional: create this page
-      }
+    }, [isLoaded, user, router]);
+
+    if (!isLoaded || !isAuthorized) {
+        return (
+            <div className="flex-1 min-h-screen flex items-center justify-center">
+                <div className="text-gray-500">Loading...</div>
+            </div>
+        );
     }
-    }, [user]);
 
     return (
        <div className="flex-1 min-h-screen flex flex-col justify-between text-sm">
