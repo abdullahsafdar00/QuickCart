@@ -39,6 +39,11 @@ async function uploadToCloudinary(file) {
 }
 
 const AddProduct = () => {
+  // Prevent static generation
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  
   const { getToken, user, router } = useAppContext();
 
   const [files, setFiles] = useState([]);
