@@ -3,12 +3,20 @@ import connectDB from "@/config/db";
 import Newsletter from "@/models/newsletter";
 import Footer from "@/components/seller/Footer";
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
 const NewsLetterPage = async () => {
   let emails = [];
 
   try {
     await connectDB();
-    emails = await Newsletter.find().sort({ createdAt: -1 });
+    const rawEmails = await Newsletter.find().sort({ createdAt: -1 }).lean();
+    emails = rawEmails.map(email => ({
+      _id: email._id.toString(),
+      email: email.email,
+      createdAt: email.createdAt.toISOString()
+    }));
   } catch (error) {
     console.error("Database connection error:", error);
   }
