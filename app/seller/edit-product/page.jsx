@@ -1,7 +1,9 @@
 "use client";
 
-
 import React, { useEffect, useState, useCallback } from "react";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
@@ -30,7 +32,7 @@ async function uploadToCloudinary(file) {
   return data.secure_url;
 }
 
-  export default function EditProduct()  {
+export default function EditProduct() {
   const { getToken, user, router, products, fetchProductData } = useAppContext();
   const [selectedProductId, setSelectedProductId] = useState("");
   const [files, setFiles] = useState([]); // for new uploads

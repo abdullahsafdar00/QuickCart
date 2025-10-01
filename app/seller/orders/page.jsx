@@ -1,5 +1,8 @@
 'use client'
 import React, { useEffect, useState } from "react";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
