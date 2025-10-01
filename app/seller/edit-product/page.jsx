@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
 import { assets } from "@/assets/assets";
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 const CLOUDINARY_CLOUD_NAME = 'dlwtqjap0';
 
