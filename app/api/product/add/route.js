@@ -15,11 +15,11 @@ cloudinary.config({
 
 export async function POST(request) {
     try {
-        const userId = getAuth(request);
+        const { userId } = getAuth(request);
         const isSeller = await authSeller(userId);
 
         if (!isSeller) {
-            return NextResponse.json({success: false, message: "not authorized"})
+            return NextResponse.json({success: false, message: "Not authorized"}, { status: 401 })
         }
 
         // Accept JSON body with image URLs
@@ -35,7 +35,7 @@ export async function POST(request) {
         }
 
         await connectDB();
-        const realUserId = typeof userId === 'string' ? userId : userId?.userId;
+    const realUserId = typeof userId === 'string' ? userId : userId?.userId;
         const newProduct = await Product.create({
             userId: realUserId,
             name,

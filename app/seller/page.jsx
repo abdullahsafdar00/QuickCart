@@ -10,17 +10,27 @@ import axios from "axios";
 
 
 
-// Cloudinary config (set these to your values)
-const CLOUDINARY_UPLOAD_PRESET = 'ecommerce_unsigned'; // <-- set your unsigned preset name
-const CLOUDINARY_CLOUD_NAME = 'dlwtqjap0'; // <-- set your Cloudinary cloud name
+// Cloudinary client upload: request a server-signed signature before uploading
+const CLOUDINARY_CLOUD_NAME = 'dlwtqjap0';
 
 async function uploadToCloudinary(file) {
-  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
+  // Request signature/timestamp from our server (which validates seller)
+  const sigRes = await fetch('/api/cloudinary/signature');
+  const sigJson = await sigRes.json();
+  if (!sigJson.success) throw new Error(sigJson.message || 'Failed to fetch upload signature');
+
+  const { signature, timestamp, cloudName } = sigJson;
+  const url = `https://api.cloudinary.com/v1_1/${cloudName || CLOUDINARY_CLOUD_NAME}/upload`;
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  formData.append('timestamp', timestamp);
+  formData.append('signature', signature);
+  // If you want to set a folder or other options, include them here and include in signature server-side
   const res = await fetch(url, { method: 'POST', body: formData });
-  if (!res.ok) throw new Error('Cloudinary upload failed');
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error('Cloudinary upload failed: ' + text);
+  }
   const data = await res.json();
   return data.secure_url;
 }
