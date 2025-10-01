@@ -7,9 +7,14 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 
+
+
 const About = () => {
+  
   return (
     <>
+
+
       <Navbar />
       <section   className="w-full px-6 md:px-16 lg:px-32 py-16 bg-white text-gray-800 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-60 h-60 bg-orange-100 rounded-full blur-3xl opacity-30 -z-10" />
@@ -137,5 +142,7 @@ const About = () => {
     </>
   );
 };
+
+
 
 export default About;

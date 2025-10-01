@@ -29,10 +29,9 @@ const NewArrivals = () => {
 
   return (
     <section className="w-full my-12">
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6 tracking-tight">
+      <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-14 tracking-tight text-center">
         New Arrivals
       </h2>
-      <div className="w-20 h-1 bg-orange-600 rounded-full mb-8" />
       {/* Mobile slider: single row */}
       <div className="block sm:hidden -mx-4 px-2">
         <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2">
