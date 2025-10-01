@@ -33,6 +33,11 @@ async function uploadToCloudinary(file) {
 }
 
 export default function EditProduct() {
+  // Prevent static generation
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  
   const { getToken, user, router, products, fetchProductData } = useAppContext();
   const [selectedProductId, setSelectedProductId] = useState("");
   const [files, setFiles] = useState([]); // for new uploads

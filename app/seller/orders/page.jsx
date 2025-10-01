@@ -13,6 +13,10 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Orders = () => {
+    // Prevent static generation
+    if (typeof window === 'undefined') {
+        return null;
+    }
 
     const { currency, getToken, user, router, getCartAmount } = useAppContext();
 

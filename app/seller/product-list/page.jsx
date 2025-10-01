@@ -13,6 +13,11 @@ import toast from "react-hot-toast";
 import axios from "axios";
 
 const ProductList = () => {
+  // Prevent static generation
+  if (typeof window === 'undefined') {
+    return null;
+  }
+  
   const { router, getToken, user } = useAppContext();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
