@@ -51,7 +51,7 @@ const AllProductsClient = () => {
         grouped.map(([category, prods]) => (
           <div key={category} className="w-full mb-10">
             <h2
-              className="text-xl md:text-2xl font-semibold text-orange-600 mb-3 cursor-pointer hover:underline tracking-tight"
+              className="text-xl md:text-3xl font-semibold text-orange-600 mb-14 text-center cursor-pointer hover:underline tracking-tight"
               onClick={() => {
                 const el = document.getElementById(`cat-${category}`);
                 if (el) el.scrollIntoView({ behavior: 'smooth' });

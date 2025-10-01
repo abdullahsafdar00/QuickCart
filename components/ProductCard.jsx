@@ -37,7 +37,7 @@ const ProductCard = ({ product }) => {
       onClick={() => {
         router.push(`/product/${product._id}`);
       }}
-      className="flex flex-col items-start gap-0.5 max-w-[200px] w-full cursor-pointer"
+      className="flex flex-col items-start gap-0.5 max-w-[200px] h-[400px] cursor-pointer"
     >
       <div
         className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center"

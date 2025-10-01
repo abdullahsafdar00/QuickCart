@@ -37,8 +37,8 @@ const HomeProducts = () => {
 
       {/* Categories section at the top */}
       {products.length > 0 && (
-        <div className="w-full mb-10">
-          <h2 className="text-2xl font-semibold text-orange-600 mb-3">Categories</h2>
+        <div className="w-full mb-24">
+          <h2 className="text-4xl font-semibold text-gray-800 mb-12">Categories</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
             {Array.from(
               products.reduce((acc, product) => {
@@ -87,11 +87,11 @@ const HomeProducts = () => {
         ).map(([category, prods]) => {
           return (
             <div key={category} className="w-full mb-10">
-              <h2 className="text-xl font-semibold text-orange-600 mb-3">{category}</h2>
+              <h2 className="text-3xl font-semibold text-center text-orange-600 mb-14">{category}</h2>
               
               {/* Mobile: Horizontal scroll slider */}
               <div className="block sm:hidden -mx-4 px-2">
-                <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-2">
+                <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory pb-12">
                   {prods.map((product, idx) => (
                     <div key={idx} className="min-w-[70vw] max-w-xs snap-center">
                       <ProductCard product={product} />
@@ -101,7 +101,7 @@ const HomeProducts = () => {
               </div>
 
               {/* Desktop: Static grid (no slider) */}
-              <div className="hidden sm:block">
+              <div className="hidden sm:block mb-12">
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                   {prods.map((product, idx) => (
                     <ProductCard key={idx} product={product} />

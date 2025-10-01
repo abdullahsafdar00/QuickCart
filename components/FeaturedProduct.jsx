@@ -154,7 +154,7 @@ const FeaturedProduct = () => {
       </div>
 
       {/* Mobile: Swipeable slider */}
-      <div className="block md:hidden mt-12 md:px-14 px-4 relative overflow-hidden" role="region" aria-label="Featured products slider">
+      <div className="block md:hidden mt-12 md:px-4 px-2 relative overflow-hidden" role="region" aria-label="Featured products slider">
         <motion.div
           ref={sliderRef}
           className="flex transition-transform duration-500"
