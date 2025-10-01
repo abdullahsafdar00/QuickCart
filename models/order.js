@@ -13,8 +13,12 @@ const orderSchema = new mongoose.Schema({
     courierName: {type: String, default: null},
     courierTrackingNumber: {type: String, default: null},
     courierStatus: {type: String, default: null},
-    courierMeta: {type: Object, default: {}}
-    
+    courierMeta: {type: Object, default: {}},
+    paymentMethod: {type: String, enum: ['cod', 'jazzcash', 'easypaisa'], default: 'cod'},
+    paymentStatus: {type: String, enum: ['pending', 'completed', 'failed'], default: 'pending'},
+    paymentTxnRef: {type: String, default: null},
+    paymentTxnId: {type: String, default: null},
+    paymentError: {type: String, default: null}
 })
 
 const Order = mongoose.models.order || mongoose.model('order', orderSchema)

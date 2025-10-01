@@ -8,9 +8,15 @@ import { motion } from "framer-motion";
 import { SignInButton } from '@clerk/nextjs';
 
 const COURIERS = [
-  { name: "M&P", value: "mnp" },
-  { name: "Trax", value: "trax" },
-  { name: "Leopard", value: "leopard" },
+  { name: "TCS", value: "tcs", logo: "🚚", description: "Fast & Reliable" },
+  { name: "M&P Express", value: "mnp", logo: "📦", description: "Nationwide Coverage" },
+  { name: "Leopard", value: "leopard", logo: "🐆", description: "Quick Delivery" },
+];
+
+const PAYMENT_METHODS = [
+  { name: "Cash on Delivery", value: "cod", logo: "💵", description: "Pay when you receive" },
+  { name: "JazzCash", value: "jazzcash", logo: "📱", description: "Mobile Wallet" },
+  { name: "EasyPaisa", value: "easypaisa", logo: "💳", description: "Digital Payment" },
 ];
 
 const OrderSummary = () => {
@@ -22,6 +28,9 @@ const OrderSummary = () => {
   const [status, setStatus] = useState("")
   const [selectedCourier, setSelectedCourier] = useState(null);
   const [autoSuggestedCourier, setAutoSuggestedCourier] = useState(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cod');
+  const [courierRates, setCourierRates] = useState({});
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
 
@@ -49,15 +58,36 @@ const OrderSummary = () => {
     setIsDropdownOpen(false);
   };
 
-  // Auto-suggest best courier based on city (extra value)
+  // Auto-suggest best courier based on city and fetch rates
   useEffect(() => {
     if (selectedAddress) {
       const city = selectedAddress.city?.toLowerCase() || "";
-      if (city.includes("karachi")) setAutoSuggestedCourier("mnp");
-      else if (city.includes("lahore")) setAutoSuggestedCourier("leopard");
-      else setAutoSuggestedCourier("trax");
+      if (city.includes("karachi")) setAutoSuggestedCourier("tcs");
+      else if (city.includes("lahore")) setAutoSuggestedCourier("mnp");
+      else setAutoSuggestedCourier("tcs");
+      
+      // Fetch courier rates
+      fetchCourierRates(city);
     }
   }, [selectedAddress]);
+
+  const fetchCourierRates = async (toCity) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.post('/api/courier', {
+        action: 'rates',
+        fromCity: 'karachi',
+        toCity,
+        weight: 1
+      }, { headers: { Authorization: `Bearer ${token}` } });
+      
+      if (data.success) {
+        setCourierRates(data.rates);
+      }
+    } catch (error) {
+      console.error('Error fetching courier rates:', error);
+    }
+  };
 
   const createOrder = async () => {
     setStatus("loading")
@@ -70,7 +100,6 @@ const OrderSummary = () => {
       }
 
       let cartItemsArray = Object.keys(cartItems).map((key)=>({product: key, quantity: cartItems[key]}))
-
       cartItemsArray = cartItemsArray.filter(item => item.quantity > 0)
 
       if (cartItemsArray.length === 0) {
@@ -78,20 +107,64 @@ const OrderSummary = () => {
       } 
 
       const token = await getToken();
-      
-
-      const { data } = await axios.post('/api/order/create', {address: selectedAddress._id, items: cartItemsArray, courierName: selectedCourier}, {headers: {Authorization: `Bearer ${token}`}})
+      const { data } = await axios.post('/api/order/create', {
+        address: selectedAddress._id, 
+        items: cartItemsArray, 
+        courierName: selectedCourier,
+        paymentMethod: selectedPaymentMethod
+      }, {headers: {Authorization: `Bearer ${token}`}})
 
       if (data.success) {
-        toast.success(data.message)
-        setCartItems({})
-        router.push('/order-placed')
+        if (selectedPaymentMethod === 'cod') {
+          toast.success(data.message)
+          setCartItems({})
+          router.push('/order-placed')
+        } else {
+          // Handle online payment
+          await initiatePayment(data.orderId)
+        }
       } else {
         toast.error(data.message)
       }
-
     } catch (error) {
       toast.error(error.message)
+    } finally {
+      setStatus("")
+    }
+  }
+
+  const initiatePayment = async (orderId) => {
+    setIsProcessingPayment(true)
+    try {
+      const token = await getToken();
+      const { data } = await axios.post('/api/payment/initiate', {
+        orderId,
+        paymentMethod: selectedPaymentMethod
+      }, { headers: { Authorization: `Bearer ${token}` } })
+
+      if (data.success) {
+        // Create form and submit to payment gateway
+        const form = document.createElement('form')
+        form.method = 'POST'
+        form.action = data.paymentUrl
+        
+        Object.entries(data.formData).forEach(([key, value]) => {
+          const input = document.createElement('input')
+          input.type = 'hidden'
+          input.name = key
+          input.value = value
+          form.appendChild(input)
+        })
+        
+        document.body.appendChild(form)
+        form.submit()
+      } else {
+        toast.error(data.message)
+      }
+    } catch (error) {
+      toast.error('Payment initiation failed')
+    } finally {
+      setIsProcessingPayment(false)
     }
   }
 
@@ -164,20 +237,61 @@ const OrderSummary = () => {
         </div>
         {/* Courier Selection */}
         <div>
-          <label className="text-base font-medium uppercase text-gray-600 block mb-2">
+          <label className="text-base font-medium uppercase text-gray-600 block mb-3">
             Select Courier Service
           </label>
-          <div className="relative inline-block w-full text-sm border">
-            <select
-              className="w-full px-4 py-2 bg-white text-gray-700 focus:outline-none"
-              value={selectedCourier || autoSuggestedCourier || ""}
-              onChange={e => setSelectedCourier(e.target.value)}
-            >
-              <option value="" disabled>Select a courier</option>
-              {COURIERS.map(courier => (
-                <option key={courier.value} value={courier.value}>{courier.name}{autoSuggestedCourier === courier.value ? " (Recommended)" : ""}</option>
-              ))}
-            </select>
+          <div className="space-y-3">
+            {COURIERS.map(courier => (
+              <div key={courier.value} className={`border rounded-lg p-3 cursor-pointer transition-all ${
+                (selectedCourier || autoSuggestedCourier) === courier.value 
+                  ? 'border-orange-500 bg-orange-50' 
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => setSelectedCourier(courier.value)}>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{courier.logo}</span>
+                    <div>
+                      <p className="font-medium text-gray-800">{courier.name}</p>
+                      <p className="text-sm text-gray-500">{courier.description}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium text-gray-800">
+                      {courierRates[courier.value] ? `${currency}${courierRates[courier.value]}` : `${currency}250`}
+                    </p>
+                    {autoSuggestedCourier === courier.value && (
+                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Recommended</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Payment Method Selection */}
+        <div>
+          <label className="text-base font-medium uppercase text-gray-600 block mb-3">
+            Payment Method
+          </label>
+          <div className="space-y-3">
+            {PAYMENT_METHODS.map(method => (
+              <div key={method.value} className={`border rounded-lg p-3 cursor-pointer transition-all ${
+                selectedPaymentMethod === method.value 
+                  ? 'border-orange-500 bg-orange-50' 
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+              onClick={() => setSelectedPaymentMethod(method.value)}>
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{method.logo}</span>
+                  <div>
+                    <p className="font-medium text-gray-800">{method.name}</p>
+                    <p className="text-sm text-gray-500">{method.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -205,13 +319,17 @@ const OrderSummary = () => {
           <button
           type="submit"
           onClick={createOrder}
-          className="w-full bg-orange-600 h-12 text-white py-3 mt-5 hover:bg-orange-700"
+          disabled={status === "loading" || isProcessingPayment}
+          className="w-full bg-orange-600 h-12 text-white py-3 mt-5 hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {status === "loading" ?  <span className="flex items-center justify-center space-x-1">
-    <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
-    <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
-    <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce" />
-  </span> : "Place Order"}
+          {status === "loading" || isProcessingPayment ?  
+            <span className="flex items-center justify-center space-x-1">
+              <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+              <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+              <span className="w-1.5 h-1.5 text-center bg-white rounded-full animate-bounce" />
+            </span> 
+            : selectedPaymentMethod === 'cod' ? "Place Order" : `Pay with ${PAYMENT_METHODS.find(m => m.value === selectedPaymentMethod)?.name}`
+          }
         </button>
       </>
        )}

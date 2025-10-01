@@ -1,30 +1,30 @@
 import mongoose from "mongoose";
 
-const catched = global.mongoose || { conn: null, promise: null };
-
+// Ensure a single mongoose connection across hot-reloads / lambda invocations
 if (!global.mongoose) {
   global.mongoose = { conn: null, promise: null };
 }
 
-async function connectDB() {
-  if (catched.conn) {
-    return catched.conn;
-  }
+const cached = global.mongoose;
 
-  if (!catched.promise) {
+async function connectDB() {
+  if (cached.conn) return cached.conn;
+
+  if (!cached.promise) {
     const opts = {
+      // prevents mongoose buffering commands while not connected
       bufferCommands: false,
+      // sensible defaults for connection pooling
+      maxPoolSize: parseInt(process.env.MONGODB_POOLSIZE || "10", 10),
     };
 
-    catched.promise = mongoose
-      .connect(`${process.env.MONGODB_URI}`, opts)
-      .then((mongoose) => {
-        return mongoose;
-      });
+    cached.promise = mongoose
+      .connect(process.env.MONGODB_URI, opts)
+      .then((m) => m);
   }
 
-  catched.conn = await catched.promise;
-  return catched.conn;
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
 
 export default connectDB;

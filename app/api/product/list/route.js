@@ -9,7 +9,10 @@ export async function GET(request) {
         await connectDB();
 
         const products = await Product.find({})
-        return NextResponse.json({success: true, products})
+        // Add a small cache window for CDN / browser (30s) to reduce DB reads under burst
+        const res = NextResponse.json({success: true, products})
+        res.headers.set('Cache-Control', 'public, s-maxage=30, stale-while-revalidate=60')
+        return res
     } catch (error) {
         return NextResponse.json({success: false, message: error.message})
     }
