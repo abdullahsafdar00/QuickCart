@@ -9,12 +9,6 @@ const nextConfig = {
   experimental: {
     serverComponentsExternalPackages: ['mongoose'],
   },
-  async generateStaticParams() {
-    return [];
-  },
-  async generateBuildId() {
-    return 'build-' + Date.now();
-  },
   output: 'standalone',
 };
 
