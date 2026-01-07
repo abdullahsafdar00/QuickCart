@@ -1,71 +1,50 @@
 import { NextResponse } from 'next/server';
+import { redirect } from 'next/navigation';
 import PaymentService from '@/lib/payment-services';
-import Order from '@/models/order';
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+  const orderId = searchParams.get('orderId') || searchParams.get('OrderNumber');
+  
+  if (orderId) {
+    return redirect(`/payment/success?orderId=${orderId}`);
+  }
+  
+  return redirect('/payment/failed');
+}
 
 export async function POST(request) {
   try {
     const formData = await request.formData();
-    const responseData = Object.fromEntries(formData);
-
+    const data = Object.fromEntries(formData);
+    
     let verificationResult;
-    let orderId;
-
-    // Determine payment method and verify
-    if (responseData.pp_TxnRefNo) {
-      // JazzCash response
-      verificationResult = PaymentService.verifyJazzCashPayment(responseData);
-      orderId = responseData.pp_BillReference;
-    } else if (responseData.orderRefNum) {
-      // EasyPaisa response
-      verificationResult = PaymentService.verifyEasyPaisaPayment(responseData);
-      orderId = responseData.orderRefNum.replace('EP', '');
+    
+    // Determine payment method and verify accordingly
+    if (data.OrderNumber && data.Signature) {
+      // PayPro Pakistan
+      verificationResult = PaymentService.verifyPayProPayment(data);
+    } else if (data.pp_TxnRefNo && data.pp_SecureHash) {
+      // JazzCash
+      verificationResult = PaymentService.verifyJazzCashPayment(data);
+    } else if (data.orderRefNum && data.merchantHashedResp) {
+      // EasyPaisa
+      verificationResult = PaymentService.verifyEasyPaisaPayment(data);
     } else {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/failed`);
+      throw new Error('Unknown payment method');
     }
-
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/failed`);
-    }
-
+    
     if (verificationResult.isValid && verificationResult.status === 'success') {
-      // Payment successful
-      order.paymentStatus = 'completed';
-      order.paymentTxnId = verificationResult.transactionId;
-      order.status = 'Payment Confirmed';
-      await order.save();
-
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/success?orderId=${orderId}`);
+      // Payment successful - redirect to success page
+      const orderId = verificationResult.transactionId;
+      return redirect(`/payment/success?orderId=${orderId}`);
     } else {
-      // Payment failed
-      order.paymentStatus = 'failed';
-      order.paymentError = verificationResult.responseMessage || 'Payment verification failed';
-      await order.save();
-
-      return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/failed?orderId=${orderId}`);
+      // Payment failed - redirect to failure page
+      return redirect('/payment/failed');
     }
-
+    
   } catch (error) {
     console.error('Payment callback error:', error);
-    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_BASE_URL}/payment/failed`);
+    return redirect('/payment/failed');
   }
-}
-
-export async function GET(request) {
-  // Handle GET requests (some payment gateways use GET for callbacks)
-  const { searchParams } = new URL(request.url);
-  const responseData = Object.fromEntries(searchParams);
-  
-  // Convert to POST-like handling
-  const mockRequest = {
-    formData: async () => {
-      const formData = new FormData();
-      Object.entries(responseData).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-      return formData;
-    }
-  };
-  
-  return POST(mockRequest);
 }

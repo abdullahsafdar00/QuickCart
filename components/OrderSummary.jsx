@@ -15,6 +15,7 @@ const COURIERS = [
 
 const PAYMENT_METHODS = [
   { name: "Cash on Delivery", value: "cod", logo: "💵", description: "Pay when you receive" },
+  { name: "PayPro Pakistan", value: "paypro", logo: "💳", description: "Secure Online Payment" },
   { name: "JazzCash", value: "jazzcash", logo: "📱", description: "Mobile Wallet" },
   { name: "EasyPaisa", value: "easypaisa", logo: "💳", description: "Digital Payment" },
 ];
@@ -120,8 +121,8 @@ const OrderSummary = () => {
           setCartItems({})
           router.push('/order-placed')
         } else {
-          // Handle online payment
-          await initiatePayment(data.orderId)
+          // Handle online payment - redirect to payment page
+          router.push(`/payment?orderId=${data.orderId}&method=${selectedPaymentMethod}`)
         }
       } else {
         toast.error(data.message)
