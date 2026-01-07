@@ -11,7 +11,7 @@ const orderSchema = new mongoose.Schema({
     status: {type: String, required: true, default: "Order Placed", index: true},
     date: {type: Date, required: true, default: Date.now, index: true},
     courierName: {type: String, default: null},
-    courierTrackingNumber: {type: String, default: null, index: true},
+    courierTrackingNumber: {type: String, default: null},
     courierStatus: {type: String, default: null},
     courierMeta: {type: Object, default: {}},
     paymentMethod: {type: String, enum: ['cod', 'jazzcash', 'easypaisa', 'paypro'], default: 'cod', index: true},

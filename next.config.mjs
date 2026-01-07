@@ -11,10 +11,7 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ['mongoose'],
-  },
-  output: 'standalone',
+  serverExternalPackages: ['mongoose'],
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
