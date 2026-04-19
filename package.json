@@ -9,10 +9,7 @@
     "build:prod": "set NODE_ENV=production && next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest",
-    "clean": "rimraf .next out node_modules/.cache",
-    "optimize": "next-optimized-images",
-    "optimize:db": "node scripts/optimize-db.js"
+    "test": "jest"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.23.2",
