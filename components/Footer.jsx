@@ -83,7 +83,7 @@ const Footer = () => {
               <motion.div variants={phoneVariants} animate="animate">
                 <Phone size={18} className="text-[#EA580C]" />
               </motion.div>
-              <span className="text-base md:text-lg font-medium">+92-3040505905</span>
+              <span className="text-base md:text-lg font-medium">+92-3232968158</span>
             </div>
             <div className="flex items-center gap-2">
               <motion.div variants={mailVariants} animate="animate">

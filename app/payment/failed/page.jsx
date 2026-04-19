@@ -70,7 +70,7 @@ const PaymentFailedContent = () => {
 
         <div className="mt-6 text-sm text-gray-500">
           <p>Need help? Contact our support team.</p>
-          <a href="https://wa.me/923040505905" className="text-orange-600 hover:underline">
+          <a href="https://wa.me/923232968158" className="text-orange-600 hover:underline">
             WhatsApp Support
           </a>
         </div>
