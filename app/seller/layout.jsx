@@ -8,10 +8,6 @@ export const dynamic = 'force-dynamic';
 export default async function SellerLayout({ children }) {
   const { userId } = await auth();
 
-  if (!userId) redirect('/access-denied');
-
-  const isSeller = await authSeller(userId);
-  if (!isSeller) redirect('/access-denied');
 
   return (
     <div className="flex w-full">
