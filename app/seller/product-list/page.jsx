@@ -14,7 +14,6 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState({ isOpen: false, productId: null });
-  const { isLoaded } = useUser();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   const fetchSellerProduct = async () => {
@@ -117,19 +116,7 @@ const ProductList = () => {
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      fetchSellerProduct();
-    }
-    if (isLoaded) {
-      const role = user?.publicMetadata?.role;
-      if (role === 'seller') {
-        setIsAuthorized(true);
-      } else {
-        router.replace('/access-denied');
-      }
-    }
-  }, [user]);
+
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">

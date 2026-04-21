@@ -39,7 +39,6 @@ const Orders = () => {
     }
 
    useEffect(() => {
-    if (!isLoaded) return;
 
     if (user) {
         fetchSellerOrders();
@@ -51,7 +50,7 @@ const Orders = () => {
             router.replace('/access-denied');
         }
     }
-}, [user, isLoaded]);
+}, [user]);
 
     return (
        <div className="flex-1 min-h-screen flex flex-col justify-between text-sm">
