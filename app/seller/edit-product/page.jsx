@@ -1,189 +1,398 @@
 "use client";
 
-import { useEffect, useState } from "react";
+
+import React, { useEffect, useState, useCallback } from "react";
+import { assets } from "@/assets/assets";
+import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-export default function EditProduct() {
-  const { getToken, user, products, fetchProductData } = useAppContext();
+const CLOUDINARY_UPLOAD_PRESET = 'ecommerce_unsigned';
+const CLOUDINARY_CLOUD_NAME = 'dlwtqjap0';
+
+async function uploadToCloudinary(file) {
+  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  
+  const res = await fetch(url, { method: 'POST', body: formData });
+  if (!res.ok) {
+    const errorData = await res.text();
+    throw new Error(`Cloudinary upload failed: ${res.status} ${errorData}`);
+  }
+  const data = await res.json();
+  return data.secure_url;
+}
+
+  export default function EditProduct()  {
+  const { getToken, user, router, products, fetchProductData } = useAppContext();
   const [selectedProductId, setSelectedProductId] = useState("");
+  const [files, setFiles] = useState([]); // for new uploads
+  const [imageUrls, setImageUrls] = useState([]); // for existing images
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Electronics");
+  const [category, setCategory] = useState("Earphone");
   const [price, setPrice] = useState("");
   const [offerPrice, setOfferPrice] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [myProducts, setMyProducts] = useState([]);
 
-  const categories = ["Electronics", "Clothing", "Books", "Home", "Sports"];
+  // Reset form function
+  const resetForm = useCallback(() => {
+    setSelectedProductId("");
+    setFiles([]);
+    setImageUrls([]);
+    setName("");
+    setDescription("");
+    setCategory("Earphone");
+    setPrice("");
+    setOfferPrice("");
+    setStatus("");
+  }, []);
 
   useEffect(() => {
-    if (user?.id && products?.length) {
-      setMyProducts(products.filter(p => p.userId === user.id));
+    // Only show products belonging to the seller
+    if (user && products && products.length > 0) {
+      const userProducts = products.filter(p => p.userId === user.id);
+      setMyProducts(userProducts);
+    } else {
+      setMyProducts([]);
     }
   }, [user, products]);
 
   useEffect(() => {
-    if (selectedProductId && myProducts.length) {
-      const product = myProducts.find(p => p._id === selectedProductId);
-      if (product) {
-        setName(product.name || "");
-        setDescription(product.description || "");
-        setCategory(product.category || "Electronics");
-        setPrice(product.price?.toString() || "");
-        setOfferPrice(product.offerPrice?.toString() || "");
+    if (selectedProductId && myProducts.length > 0) {
+      const prod = myProducts.find(p => p._id === selectedProductId);
+      if (prod) {
+        setName(prod.name || "");
+        setDescription(prod.description || "");
+        setCategory(prod.category || "Earphone");
+        setPrice(prod.price ? String(prod.price) : "");
+        setOfferPrice(prod.offerPrice ? String(prod.offerPrice) : "");
+        setImageUrls(Array.isArray(prod.image) ? prod.image : []);
+        setFiles([]);
+        setStatus("");
       }
+    } else if (!selectedProductId) {
+      // Reset form when no product is selected
+      setName("");
+      setDescription("");
+      setCategory("Earphone");
+      setPrice("");
+      setOfferPrice("");
+      setImageUrls([]);
+      setFiles([]);
+      setStatus("");
     }
   }, [selectedProductId, myProducts]);
+
+  const handleImageChange = (e, idx) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Each image must be less than 2MB');
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error('Please upload only image files (JPEG, PNG, GIF)');
+      return;
+    }
+
+    const updatedFiles = [...files];
+    updatedFiles[idx] = file;
+    setFiles(updatedFiles);
+  };
+
+  const handleRemoveImage = (idx) => {
+    setImageUrls(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleRemoveNewFile = (idx) => {
+    setFiles(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const validateForm = () => {
+    if (!name.trim()) {
+      toast.error('Product name is required');
+      return false;
+    }
+    if (!description.trim()) {
+      toast.error('Product description is required');
+      return false;
+    }
+    if (!price || isNaN(Number(price)) || Number(price) <= 0) {
+      toast.error('Please enter a valid price');
+      return false;
+    }
+    if (imageUrls.length === 0 && files.filter(f => f).length === 0) {
+      toast.error('At least one product image is required');
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!name.trim() || !description.trim() || !price || price <= 0) {
-      toast.error('Please fill all required fields with valid values');
-      return;
-    }
+    if (!validateForm()) return;
     
-    if (offerPrice && Number(offerPrice) >= Number(price)) {
-      toast.error('Offer price must be less than regular price');
-      return;
-    }
-    
-    setLoading(true);
+    setStatus('loading');
+    setUploading(true);
     
     try {
-      const token = await getToken();
-      const { data } = await axios.put('/api/product/edit', {
+      // Upload new images to Cloudinary
+      let newImageUrls = [...imageUrls];
+      const validFiles = files.filter(file => file);
+      
+      if (validFiles.length > 0) {
+        const uploadPromises = validFiles.map(file => uploadToCloudinary(file));
+        const uploadedUrls = await Promise.all(uploadPromises);
+        newImageUrls = [...newImageUrls, ...uploadedUrls];
+      }
+      
+      setUploading(false);
+      
+      // Prepare form data
+      const formData = {
         name: name.trim(),
         description: description.trim(),
         category,
         price: Number(price),
-        offerPrice: offerPrice ? Number(offerPrice) : null,
+        offerPrice: offerPrice ? Number(offerPrice) : undefined,
+        image: newImageUrls,
         productId: selectedProductId,
-      }, {
+      };
+      
+      const token = await getToken();
+      if (!token) {
+        throw new Error('Authentication token not found');
+      }
+      
+      const { data } = await axios.put('/api/product/edit', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
       if (data.success) {
         toast.success("Product updated successfully!");
-        await fetchProductData();
-        setSelectedProductId("");
+        setStatus('success');
+        await fetchProductData(); // Refresh product data
+        // Optionally reset form or keep it populated
       } else {
         toast.error(data.message || 'Failed to update product');
+        setStatus('error');
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update product');
-    } finally {
-      setLoading(false);
+      setUploading(false);
+      console.error('Update product error:', error);
+      toast.error(error.response?.data?.message || error.message || 'Failed to update product');
+      setStatus('error');
     }
   };
 
   if (!user) {
-    return (
-      <div className="flex-1 min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
-      </div>
-    );
+    router.push('/access-denied')
   }
 
   return (
-    <div className="flex-1 min-h-screen p-4 md:p-8">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold mb-6">Edit Product</h1>
+    <div className="flex-1 min-h-screen flex flex-col justify-between">
+      <div className="md:p-10 p-4 space-y-5 max-w-lg">
+        <h2 className="text-xl font-semibold mb-4">Edit Product</h2>
         
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">Select Product</label>
+        <div className="mb-4">
+          <label className="block mb-1 font-medium">Select a product to edit:</label>
           <select
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full border rounded px-3 py-2 focus:outline-none focus:border-orange-500"
             value={selectedProductId}
             onChange={e => setSelectedProductId(e.target.value)}
           >
-            <option value="">Choose a product to edit</option>
-            {myProducts.map(product => (
-              <option key={product._id} value={product._id}>
-                {product.name}
-              </option>
+            <option value="">-- Select a product --</option>
+            {myProducts.map((p) => (
+              <option key={p._id} value={p._id}>{p.name}</option>
             ))}
           </select>
+          {myProducts.length === 0 && (
+            <p className="text-sm text-gray-500 mt-1">No products found. Create a product first.</p>
+          )}
         </div>
 
         {selectedProductId && (
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-2">Product Name *</label>
+              <p className="text-base font-medium mb-2">Product Images</p>
+              <div className="flex flex-wrap items-center gap-3">
+                {/* Existing images */}
+                {imageUrls.map((url, idx) => (
+                  <div key={`existing-${idx}`} className="relative">
+                    <Image 
+                      src={url} 
+                      alt={`Product ${idx + 1}`} 
+                      width={100} 
+                      height={100} 
+                      className="w-24 h-24 object-cover rounded border"
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => handleRemoveImage(idx)} 
+                      className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs hover:bg-red-600"
+                      title="Remove image"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                
+                {/* Preview new files */}
+                {files.map((file, idx) => file && (
+                  <div key={`new-${idx}`} className="relative">
+                    <Image 
+                      src={URL.createObjectURL(file)} 
+                      alt={`New upload ${idx + 1}`} 
+                      width={100} 
+                      height={100} 
+                      className="w-24 h-24 object-cover rounded border"
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => handleRemoveNewFile(idx)} 
+                      className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 text-xs hover:bg-red-600"
+                      title="Remove new upload"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+                
+                {/* Upload areas */}
+                {imageUrls.length + files.filter(f => f).length < 4 && (
+                  [...Array(4 - imageUrls.length - files.filter(f => f).length)].map((_, idx) => (
+                    <label 
+                      key={`upload-${idx}`} 
+                      htmlFor={`image-upload-${idx}`} 
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      <input 
+                        type="file" 
+                        id={`image-upload-${idx}`} 
+                        hidden 
+                        accept="image/*"
+                        onChange={e => handleImageChange(e, files.filter(f => f).length)} 
+                      />
+                      <Image 
+                        src={assets.upload_area} 
+                        alt="Upload area" 
+                        width={100} 
+                        height={100} 
+                        className="w-24 h-24 border-2 border-dashed border-gray-300 rounded"
+                      />
+                    </label>
+                  ))
+                )}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Maximum 4 images. Each image must be less than 2MB.</p>
+            </div>
+
+            <div className="flex flex-col gap-1 max-w-md">
+              <label className="text-base font-medium" htmlFor="product-name">Product Name *</label>
               <input 
+                id="product-name" 
                 type="text" 
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+                className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-300 focus:border-orange-500" 
                 value={name} 
                 onChange={e => setName(e.target.value)} 
-                placeholder="Enter product name"
                 required 
+                maxLength={100}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Description *</label>
+            <div className="flex flex-col gap-1 max-w-md">
+              <label className="text-base font-medium" htmlFor="product-description">Product Description *</label>
               <textarea 
+                id="product-description" 
                 rows={4} 
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none" 
+                className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-300 focus:border-orange-500 resize-none" 
                 value={description} 
                 onChange={e => setDescription(e.target.value)} 
-                placeholder="Describe your product"
                 required
+                maxLength={1000}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Category *</label>
-              <select
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                value={category}
-                onChange={e => setCategory(e.target.value)}
-              >
-                {categories.map(cat => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
+            <div className="flex items-center gap-5 flex-wrap">
+              <div className="flex flex-col gap-1 w-32">
+                <label className="text-base font-medium" htmlFor="category">Category</label>
+                <select 
+                  id="category" 
+                  className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-300 focus:border-orange-500" 
+                  value={category} 
+                  onChange={e => setCategory(e.target.value)}
+                >
+              <option value="Accessories">Accessories</option>
+              <option value="Irons & Steamers">Irons & Steamers</option>
+              <option value="Body Massager">Body Massager</option>
+              <option value="Kitchen Appliances">Kitchen Appliances</option>
+              <option value="Beauty products and tools">Beauty products and tools</option>
+                </select>
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Price (PKR) *</label>
+              <div className="flex flex-col gap-1 w-32">
+                <label className="text-base font-medium" htmlFor="product-price">Price *</label>
                 <input 
+                  id="product-price" 
                   type="number" 
-                  min="1"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+                  step="0.01"
+                  min="0"
+                  className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-300 focus:border-orange-500" 
                   value={price} 
                   onChange={e => setPrice(e.target.value)} 
-                  placeholder="0"
                   required 
                 />
               </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2">Offer Price (PKR)</label>
+
+              <div className="flex flex-col gap-1 w-32">
+                <label className="text-base font-medium" htmlFor="offer-price">Offer Price</label>
                 <input 
+                  id="offer-price" 
                   type="number" 
-                  min="1"
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" 
+                  step="0.01"
+                  min="0"
+                  className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-300 focus:border-orange-500" 
                   value={offerPrice} 
                   onChange={e => setOfferPrice(e.target.value)} 
-                  placeholder="Optional"
                 />
               </div>
             </div>
 
             <button 
               type="submit" 
-              className="w-full bg-orange-600 hover:bg-orange-700 disabled:bg-gray-400 text-white font-medium py-3 px-6 rounded-lg transition-colors" 
-              disabled={loading}
+              className="md:px-6 px-6 h-10 text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+              disabled={uploading || status === 'loading'}
             >
-              {loading ? 'Updating Product...' : 'Update Product'}
+              {uploading ? 'Uploading Images...' : status === 'loading' ? (
+                <span className="flex items-center justify-center space-x-1">
+                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.3s]" />
+                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce [animation-delay:-0.15s]" />
+                  <span className="w-1.5 h-1.5 bg-white rounded-full animate-bounce" />
+                </span>
+              ) : 'Update Product'}
             </button>
+
+            {status === "success" && (
+              <p className="text-green-600 pt-2 font-medium">✓ Product updated successfully!</p>
+            )}
+            {status === "error" && (
+              <p className="text-red-600 pt-2">❌ Failed to update product. Please try again.</p>
+            )}
           </form>
         )}
       </div>
     </div>
   );
-}
+};

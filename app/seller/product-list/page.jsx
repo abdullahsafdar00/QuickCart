@@ -1,10 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { assets } from "@/assets/assets";
-import ClientOnly from "@/components/ClientOnly";
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
 import { useUser } from '@clerk/nextjs';
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
@@ -13,7 +9,7 @@ import Loading from "@/components/Loading";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-function ProductListContent() {
+const ProductList = () => {
   const { router, getToken, user } = useAppContext();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -213,7 +209,9 @@ function ProductListContent() {
                           }`}
                         />
                       </button>
-                    
+                      <span className="text-xs text-gray-500 ml-2">
+                        {product.promotion ? "Promotion" : "No Promotion"}
+                      </span>
                     </td>
                   </tr>
                 ))}
@@ -304,7 +302,7 @@ function ProductListContent() {
                     
                     <button
                       onClick={() => openDeleteModal(product._id)}
-                      className="px-3 py-2 sm:px-3 sm:py-2 text-red-600 border border-red-600 rounded-md text-xs sm:text-sm font-medium hover:bg-red-50 transition-colors"
+                      className="px-3 py-2 sm:px-3 sm:py-2 text-red-600 border border-red-200 rounded-md text-xs sm:text-sm font-medium hover:bg-red-50 transition-colors"
                     >
                       Remove
                     </button>
@@ -354,14 +352,6 @@ function ProductListContent() {
 
       <Footer />
     </div>
-  );
-}
-
-const ProductList = () => {
-  return (
-    <ClientOnly>
-      <ProductListContent />
-    </ClientOnly>
   );
 };
 

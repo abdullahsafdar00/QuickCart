@@ -1,10 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import { assets } from "@/assets/assets";
-import ClientOnly from "@/components/ClientOnly";
-
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
 import Image from "next/image";
 import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/seller/Footer";
@@ -13,7 +9,8 @@ import { useUser } from '@clerk/nextjs';
 import axios from "axios";
 import toast from "react-hot-toast";
 
-function OrdersContent() {
+const Orders = () => {
+
     const { currency, getToken, user, router, getCartAmount } = useAppContext();
 
     const [orders, setOrders] = useState([]);
@@ -42,26 +39,18 @@ function OrdersContent() {
     }
 
     useEffect(() => {
-        if (isLoaded && user) {
-            const role = user?.publicMetadata?.role;
-            if (role === 'seller') {
-                setIsAuthorized(true);
-                fetchSellerOrders();
-            } else {
-                router.replace('/access-denied');
-            }
-        } else if (isLoaded && !user) {
-            router.replace('/access-denied');
+        if (user) {
+            fetchSellerOrders();
         }
-    }, [isLoaded, user, router]);
-
-    if (!isLoaded || !isAuthorized) {
-        return (
-            <div className="flex-1 min-h-screen flex items-center justify-center">
-                <div className="text-gray-500">Loading...</div>
-            </div>
-        );
+        if (isLoaded) {
+      const role = user?.publicMetadata?.role;
+      if (role === 'seller') {
+        setIsAuthorized(true);
+      } else {
+        router.replace('/access-denied'); // Optional: create this page
+      }
     }
+    }, [user]);
 
     return (
        <div className="flex-1 min-h-screen flex flex-col justify-between text-sm">
@@ -130,14 +119,6 @@ function OrdersContent() {
   <Footer />
 </div>
 
-    );
-}
-
-const Orders = () => {
-    return (
-        <ClientOnly>
-            <OrdersContent />
-        </ClientOnly>
     );
 };
 

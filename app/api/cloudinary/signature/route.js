@@ -18,7 +18,7 @@ export async function GET(request) {
     const toSign = `timestamp=${timestamp}${process.env.CLOUDINARY_API_SECRET ? '' : ''}`;
     const signature = crypto.createHash('sha1').update(toSign + process.env.CLOUDINARY_API_SECRET).digest('hex');
 
-    return NextResponse.json({ success: true, signature, timestamp, cloudName: process.env.CLOUDINARY_CLOUD_NAME });
+    return NextResponse.json({ success: true, signature, timestamp, cloudName: process.env.CLOUDINARY_CLOUD_NAME, apiKey: process.env.CLOUDINARY_API_KEY });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }

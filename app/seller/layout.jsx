@@ -1,20 +1,17 @@
-import { auth } from '@clerk/nextjs/server';
-import authSeller from '@/lib/authSeller';
-import { redirect } from 'next/navigation';
-import Sidebar from '@/components/seller/Sidebar'; // adjust path
+import Navbar from '@/components/seller/Navbar'
+import Sidebar from '@/components/seller/Sidebar'
+import React from 'react'
 
-export const dynamic = 'force-dynamic';
-
-export default async function SellerLayout({ children }) {
-  const { userId } = await auth();
-
-
+const Layout = ({ children }) => {
   return (
-    <div className="flex w-full">
-      <Sidebar /> {/* ✅ NOW IT WILL SHOW */}
-      <div className="flex-1">
+    <div>
+      <Navbar />
+      <div className='flex w-full'>
+        <Sidebar />
         {children}
       </div>
     </div>
-  );
+  )
 }
+
+export default Layout
