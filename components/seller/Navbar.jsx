@@ -16,13 +16,7 @@ const Navbar = () => {
     <div className='flex items-center px-4 md:px-8 py-3 justify-between border-b'>
      <h1 className="cursor-pointer w-28 md:w-32 text-3xl"
         onClick={() => router.push('/')} >
-           <Image
-                                  src={assets.hmLogo}
-                                  width={60}
-                                  height={60}
-                                  className="rounded object-cover"
-                                  alt="BrandLogo"
-                                />
+           <Image src={assets.hmLogo} alt="HM Electronics" width={64} height={64} className="inline mr-2" />
         </h1>
          {user ? (
                  <UserButton/>

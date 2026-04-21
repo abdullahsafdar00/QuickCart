@@ -4,8 +4,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Phone, Mail } from "lucide-react";
-import { assets } from "@/assets/assets";
 import Image from "next/image";
+import { assets } from "@/assets/assets";
 
 const Footer = () => {
   const router = useRouter();
@@ -41,18 +41,12 @@ const Footer = () => {
           transition={{ duration: 0.6 }} className="flex flex-col md:flex-row justify-between gap-12 px-6 md:px-16 lg:px-32 py-14">
         {/* Brand */}
         <div className="w-full md:w-1/3 space-y-5">
-          <div
+          <h1
             onClick={() => router.push("/")}
             className="cursor-pointer text-3xl md:text-4xl font-extrabold text-gray-800 tracking-tight"
           >
-             <Image
-                        src={assets.hmLogo}
-                        width={60}
-                        height={60}
-                        className="rounded object-cover"
-                        alt="BrandLogo"
-                      />
-          </div>
+            <Image src={assets.hmLogo} alt="HM Electronics" width={64} height={64} className="inline mr-2" />
+          </h1>
           <p className="text-sm leading-relaxed text-gray-500">
             We’re one of Pakistan’s most trusted online electronics stores,
             providing original products with Cash on Delivery, fast shipping,

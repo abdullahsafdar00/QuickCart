@@ -7,18 +7,18 @@ import { useAppContext } from "@/context/AppContext";
 import Image from "next/image";
 import { useClerk, UserButton } from "@clerk/nextjs";
 import { motion } from "framer-motion";
-import { Menu, X, ChevronDown, ShoppingBagIcon } from "lucide-react";
+import {  Menu, X, ChevronDown, ShoppingBagIcon } from "lucide-react";
 
 const containerVariants = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.2 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.2 }
   },
 };
 
 const itemVariants = {
   hidden: { opacity: 0, y: -10 },
-  show: { opacity: 1, y: 0, transition: { type: "spring" } },
+  show: { opacity: 1, y: 0, transition: { type: "spring" } }
 };
 
 const Navbar = () => {
@@ -32,9 +32,7 @@ const Navbar = () => {
   const [showCategorySlider, setShowCategorySlider] = useState(false);
 
   // Get unique categories from products
-  const categories = Array.from(
-    new Set(products.map((p) => p.category)),
-  ).filter(Boolean);
+  const categories = Array.from(new Set(products.map((p) => p.category))).filter(Boolean);
 
   // Filter products by selected category
   const categoryProducts = selectedCategory
@@ -46,7 +44,7 @@ const Navbar = () => {
       setFilteredProducts([]);
     } else {
       const filtered = products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setFilteredProducts(filtered);
     }
@@ -54,7 +52,7 @@ const Navbar = () => {
 
   const navLinks = [
     { label: "Home", href: "/", icon: <HomeIcon /> },
-    { label: "All Products", href: "/all-products", icon: <ShoppingBagIcon /> },
+    { label: "All Products", href: "/all-products", icon: <ShoppingBagIcon/> },
     { label: "My Orders", href: "/my-orders", icon: <BagIcon /> },
   ];
 
@@ -80,143 +78,120 @@ const Navbar = () => {
           className="text-2xl md:text-3xl font-extrabold flex-1 text-center cursor-pointer md:flex-none md:ml-0 tracking-tight text-gray-800"
           onClick={() => router.push("/")}
         >
-          <Image
-            src={assets.hmLogo}
-            width={60}
-            height={60}
-            className="rounded object-cover"
-            alt="BrandLogo"
-          />
+          <Image src={assets.hmLogo} alt="HM Electronics" width={64} height={64} className="inline mr-2" />
         </motion.h1>
 
-        {/* Desktop Links */}
-        {/* Desktop Links */}
-        <motion.div
-          className="hidden md:flex items-center gap-8"
-          variants={containerVariants}
-        >
-          {[
-            "/",
-            "/all-products",
-            "/about-us",
-            "/contact-us",
-            "/privacy-policy",
-          ].map((href, index) => {
-            const label = [
-              "Home",
-              "Shop",
-              "About Us",
-              "Contact Us",
-              "Privacy Policy",
-            ][index];
+       {/* Desktop Links */}
+{/* Desktop Links */}
+<motion.div
+  className="hidden md:flex items-center gap-8"
+  variants={containerVariants}
+>
+  {[
+    "/", "/all-products", "/about-us", "/contact-us", "/privacy-policy"
+  ].map((href, index) => {
+    const label = [
+      "Home",
+      "Shop",
+      "About Us",
+      "Contact Us",
+      "Privacy Policy"
+    ][index];
 
-            return (
-              <motion.div key={href} variants={itemVariants}>
-                <Link
-                  href={href}
-                  className="relative inline-block text-base md:text-lg font-semibold text-gray-800 transition hover:text-orange-500 tracking-tight
+    return (
+      <motion.div key={href} variants={itemVariants}>
+        <Link
+          href={href}
+          className="relative inline-block text-base md:text-lg font-semibold text-gray-800 transition hover:text-orange-500 tracking-tight
             after:absolute after:bottom-0 after:left-0 after:h-[2px] after:rounded-full after:w-0 
             after:bg-[#EA580C] after:transition-all after:duration-300 hover:after:w-full"
-                >
-                  {label}
-                </Link>
-              </motion.div>
-            );
-          })}
+        >
+          {label}
+        </Link>
+      </motion.div>
+    );
+  })}
 
-          {/* Categories Dropdown with Icon */}
-          <motion.div variants={itemVariants} className="relative group">
-            <div
-              className="flex items-center gap-1 cursor-pointer text-base md:text-lg font-semibold text-gray-800 hover:text-orange-500 tracking-tight
+  {/* Categories Dropdown with Icon */}
+  <motion.div variants={itemVariants} className="relative group">
+    <div className="flex items-center gap-1 cursor-pointer text-base md:text-lg font-semibold text-gray-800 hover:text-orange-500 tracking-tight
       after:absolute after:bottom-0 after:left-0 after:h-[2px] after:rounded-full after:w-0 
       after:bg-[#EA580C] after:transition-all after:duration-300 group-hover:after:w-full
       relative"
-            >
-              <span>Categories</span>
-              <ChevronDown
-                size={18}
-                className="transition-transform duration-300 group-hover:rotate-180"
-              />
-            </div>
+    >
+      <span>Categories</span>
+      <ChevronDown
+        size={18}
+        className="transition-transform duration-300 group-hover:rotate-180"
+      />
+    </div>
 
-            {/* Hover-safe dropdown */}
-            <div className="absolute left-0 mt-2 w-52 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    router.push(
-                      `/all-products?category=${encodeURIComponent(cat)}`,
-                    );
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full text-left px-4 py-2 text-gray-800 hover:bg-orange-50 text-sm md:text-base"
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        </motion.div>
+    {/* Hover-safe dropdown */}
+    <div className="absolute left-0 mt-2 w-52 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+      {categories.map((cat) => (
+        <button
+          key={cat}
+          onClick={() => {
+            router.push(`/all-products?category=${encodeURIComponent(cat)}`);
+            setMobileMenuOpen(false);
+          }}
+          className="w-full text-left px-4 py-2 text-gray-800 hover:bg-orange-50 text-sm md:text-base"
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+  </motion.div>
+</motion.div>
+
+
 
         {/* Right Icons */}
         <div className="flex items-center gap-4 ml-auto md:ml-0">
           {/* Search Toggle Icon */}
           <button onClick={() => setShowSearch(!showSearch)}>
-            <Image
-              className="w-6 h-6 font-extrabold "
-              src={assets.search_icon}
-              alt="search icon"
-            />
+            <Image className="w-6 h-6 font-extrabold " src={assets.search_icon} alt="search icon" />
           </button>
 
           {/* Cart */}
-
+          
           <div className="relative">
             <button onClick={() => router.push("/cart")}>
-              <Image
-                className="w-6 h-6"
-                src={assets.cart_icon}
-                alt="cart icon"
-              />
-              {getCartCount() > 0 ? (
-                <span className="absolute -top-3 -right-2 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">
-                  {getCartCount()}
-                </span>
-              ) : (
-                ""
-              )}
+              <Image className="w-6 h-6" src={assets.cart_icon} alt="cart icon" />
+              {getCartCount() > 0 ? (<span className="absolute -top-3 -right-2 bg-red-500 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full">
+                {getCartCount()}
+              </span>) : ""}
+              
             </button>
           </div>
 
           {/* Auth */}
           {user ? (
             <>
-              <UserButton>
-                <UserButton.MenuItems>
-                  <UserButton.Action
-                    label="Cart"
-                    labelIcon={<CartIcon />}
-                    onClick={() => router.push("/cart")}
-                  />
-                </UserButton.MenuItems>
+            <UserButton>
+            <UserButton.MenuItems>
+              <UserButton.Action
+                label="Cart"
+                labelIcon={<CartIcon />}
+                onClick={() => router.push("/cart")}
+              />
+            </UserButton.MenuItems>
 
-                <UserButton.MenuItems>
-                  <UserButton.Action
-                    label="My Orders"
-                    labelIcon={<BagIcon />}
-                    onClick={() => router.push("/my-orders")}
-                  />
-                </UserButton.MenuItems>
-              </UserButton>
+            <UserButton.MenuItems>
+              <UserButton.Action
+                label="My Orders"
+                labelIcon={<BagIcon />}
+                onClick={() => router.push("/my-orders")}
+              />
+            </UserButton.MenuItems>
+          </UserButton>
+            
             </>
+            
+
           ) : (
             <button onClick={openSignIn}>
-              <Image
-                src={assets.user_icon}
-                alt="user icon"
-                className="w-6 h-6"
-              />
+              <Image src={assets.user_icon} alt="user icon" className="w-6 h-6" />
             </button>
           )}
         </div>
@@ -239,16 +214,12 @@ const Navbar = () => {
             ))}
             <hr className="my-2 border-gray-200" />
             <div className="flex flex-col gap-2">
-              <span className="font-semibold text-gray-700 text-base md:text-lg tracking-tight">
-                Categories
-              </span>
+              <span className="font-semibold text-gray-700 text-base md:text-lg tracking-tight">Categories</span>
               {categories.map((cat) => (
                 <button
                   key={cat}
                   onClick={() => {
-                    router.push(
-                      `/all-products?category=${encodeURIComponent(cat)}`,
-                    );
+                    router.push(`/all-products?category=${encodeURIComponent(cat)}`);
                     setMobileMenuOpen(false);
                   }}
                   className="text-left px-2 py-1 rounded hover:bg-orange-50 text-gray-700 text-base md:text-lg font-medium"
@@ -271,13 +242,7 @@ const Navbar = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
           />
-          <span
-            className="absolute top-6 left-[90%] cursor-pointer"
-            onClick={() => setShowSearch(false)}
-          >
-            {" "}
-            <X size={24} />{" "}
-          </span>
+          <span className="absolute top-6 left-[90%] cursor-pointer" onClick={() => setShowSearch(false)}> <X size={24}/> </span>
 
           {/* Search Results */}
           {searchTerm && (
