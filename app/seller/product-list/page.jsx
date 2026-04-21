@@ -209,9 +209,7 @@ const ProductList = () => {
                           }`}
                         />
                       </button>
-                      <span className="text-xs text-gray-500 ml-2">
-                        {product.promotion ? "Promotion" : "No Promotion"}
-                      </span>
+                    
                     </td>
                   </tr>
                 ))}
@@ -302,7 +300,7 @@ const ProductList = () => {
                     
                     <button
                       onClick={() => openDeleteModal(product._id)}
-                      className="px-3 py-2 sm:px-3 sm:py-2 text-red-600 border border-red-200 rounded-md text-xs sm:text-sm font-medium hover:bg-red-50 transition-colors"
+                      className="px-3 py-2 sm:px-3 sm:py-2 text-red-600 border border-red-600 rounded-md text-xs sm:text-sm font-medium hover:bg-red-50 transition-colors"
                     >
                       Remove
                     </button>

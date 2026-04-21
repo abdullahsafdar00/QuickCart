@@ -141,8 +141,8 @@ const ContactUs = () => {
               </p>
               <p>
                 📞 Phone:{" "}
-                <a href="tel:+923232968158" className="text-orange-600">
-                  +92 3232968158
+                <a href="tel:+923040505905" className="text-orange-600">
+                  +92 304-0505905
                 </a>
               </p>
               <p>📍 Address: HM Electronics, Faisalabad, Pakistan</p>
@@ -158,7 +158,7 @@ const ContactUs = () => {
 
         {/* WhatsApp CTA */}
         <a
-          href="https://wa.me/923232968158"
+          href="https://wa.me/923040505905"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 p-4 rounded-full shadow-xl z-50 transition"

@@ -8,15 +8,19 @@ import { useAppContext } from "@/context/AppContext";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-const CLOUDINARY_UPLOAD_PRESET = 'ecommerce_unsigned';
 const CLOUDINARY_CLOUD_NAME = 'dlwtqjap0';
 
 async function uploadToCloudinary(file) {
-  const url = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
+  const sigRes = await fetch('/api/cloudinary/signature');
+  const sigJson = await sigRes.json();
+  if (!sigJson.success) throw new Error(sigJson.message || 'Failed to fetch upload signature');
+
+  const { signature, timestamp, cloudName } = sigJson;
+  const url = `https://api.cloudinary.com/v1_1/${cloudName || CLOUDINARY_CLOUD_NAME}/upload`;
   const formData = new FormData();
   formData.append('file', file);
-  formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-  
+  formData.append('timestamp', timestamp);
+  formData.append('signature', signature);
   const res = await fetch(url, { method: 'POST', body: formData });
   if (!res.ok) {
     const errorData = await res.text();
@@ -200,6 +204,12 @@ async function uploadToCloudinary(file) {
   if (!user) {
     router.push('/access-denied')
   }
+
+  useEffect(() => {
+    if (!user) {
+      router.push('/access-denied');
+    }
+  }, [user, router]);
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
