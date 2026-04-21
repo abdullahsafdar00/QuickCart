@@ -84,21 +84,6 @@ const AddProduct = () => {
     }
   };
 
- function isAdmin(){
-    if (isLoaded) {
-      const role = user?.publicMetadata?.role;
-      if (role === 'seller') {
-        setIsAuthorized(true);
-      } else {
-        router.replace('/access-denied'); // Optional: create this page
-      }
-    }
- }
-
- useEffect(() => {
-  isAdmin();
- })
- 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
       <form onSubmit={handleSubmit} className="md:p-10 p-4 space-y-5 max-w-lg">

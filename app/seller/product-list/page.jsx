@@ -140,7 +140,7 @@ const ProductList = () => {
           <h2 className="pb-4 text-lg font-medium">All Products</h2>
 
           {/* Desktop Table - Hidden on mobile */}
-          <div className="hidden lg:block w-full overflow-x-auto">
+          <div className="hidden lg:block xl:block w-full overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200 rounded-md">
               <thead className="text-gray-900 text-sm text-left">
                 <tr>
@@ -293,9 +293,7 @@ const ProductList = () => {
                           }`}
                         />
                       </button>
-                      <span className="text-xs text-gray-500">
-                        {product.promotion ? "In Promotion" : "Out of Promotion"}
-                      </span>
+                    
                     </div>
 
                     
