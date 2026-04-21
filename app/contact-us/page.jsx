@@ -142,7 +142,7 @@ const ContactUs = () => {
               <p>
                 📞 Phone:{" "}
                 <a href="tel:+923232968158" className="text-orange-600">
-                  +92 304-0505905
+                  +92 3232968158
                 </a>
               </p>
               <p>📍 Address: HM Electronics, Faisalabad, Pakistan</p>

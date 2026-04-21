@@ -10,12 +10,9 @@ const OrderPlaced = () => {
 
   const { router } = useAppContext();
 
-  React.useEffect(() => {
-    const t = setTimeout(() => {
-      router.push('/my-orders');
-    }, 2000);
-    return () => clearTimeout(t);
-  }, [router]);
+  setTimeout(() => {
+    router.push('/my-orders')
+  }, 2000);
 
 
   return (

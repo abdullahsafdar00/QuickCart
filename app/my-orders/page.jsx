@@ -9,7 +9,6 @@ import Loading from "@/components/Loading";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import OrderTracking from "@/components/OrderTracking";
 
 const MyOrders = () => {
 
@@ -50,33 +49,53 @@ const MyOrders = () => {
           transition={{ duration: 0.6 }} className="flex flex-col justify-between px-6 md:px-16 lg:px-32 py-6 min-h-screen">
                 <div className="space-y-5">
                     <h2 className="text-lg font-medium mt-6">My Orders</h2>
-                    {loading ? <Loading /> : (
-                        <div className="space-y-4">
-                            {orders.length === 0 ? (
-                                <div className="text-center py-12">
+                    {loading ? <Loading /> : (<div className="max-w-5xl border-t border-gray-300 text-sm">
+                        {orders.map((order, index) => (
+                            <div key={index} className="flex flex-col md:flex-row gap-5 justify-between p-5 border-b border-gray-300">
+                                <div className="flex-1 flex gap-5 max-w-80">
                                     <Image
+                                        className="max-w-16 max-h-16 object-cover"
                                         src={assets.box_icon}
-                                        alt="No orders"
-                                        className="mx-auto mb-4 opacity-50"
-                                        width={64}
-                                        height={64}
+                                        alt="box_icon"
                                     />
-                                    <p className="text-gray-500 text-lg">No orders found</p>
-                                    <p className="text-gray-400 text-sm mt-2">Start shopping to see your orders here</p>
+                                    <p className="flex flex-col gap-3">
+                                        <span className="font-medium text-base">
+                                            {order.items.map((item) => item.product?.name + ` x ${item.quantity}`).join(", ")}
+                                        </span>
+                                        <span>Items : {order.items.length}</span>
+                                    </p>
                                 </div>
-                            ) : (
-                                orders.map((order, index) => (
-                                    <OrderTracking 
-                                        key={order._id || index} 
-                                        order={order} 
-                                        token={getToken}
-                                    />
-                                ))
-                            )}
-                        </div>
-                    )}
+                                <div>
+                                    <p>
+                                        <span className="font-medium">{order.address.fullName}</span>
+                                        <br />
+                                        <span >{order.address.area}</span>
+                                        <br />
+                                        <span>{`${order.address.city}, ${order.address.state}`}</span>
+                                        <br />
+                                        <span>{order.address.phoneNumber}</span>
+                                    </p>
+                                    {order.courierName && (
+                                      <div className="mt-2 text-xs text-gray-600">
+                                        <span className="font-semibold">Courier:</span> {order.courierName.toUpperCase()}<br/>
+                                        <span className="font-semibold">Tracking #:</span> {order.courierTrackingNumber}<br/>
+                                        <span className="font-semibold">Status:</span> {order.courierStatus || 'N/A'}
+                                      </div>
+                                    )}
+                                </div>
+                                <p className="font-medium my-auto">{currency}{order?.amount}</p>
+                                <div>
+                                    <p className="flex flex-col">
+                                        <span>Method : COD</span>
+                                        <span>Date : {new Date(order.date).toLocaleDateString()}</span>
+                                        <span>Payment : Pending</span>
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>)}
                      <a
-          href="https://wa.me/923232968158"
+          href="https://wa.me/923040505905"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 p-4 rounded-full shadow-xl z-50 transition"

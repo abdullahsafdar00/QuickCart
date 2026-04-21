@@ -7,14 +7,9 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
 
-
-
 const About = () => {
-  
   return (
     <>
-
-
       <Navbar />
       <section   className="w-full px-6 md:px-16 lg:px-32 py-16 bg-white text-gray-800 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-60 h-60 bg-orange-100 rounded-full blur-3xl opacity-30 -z-10" />
@@ -82,7 +77,7 @@ const About = () => {
               />
             </motion.div>
              <a
-          href="https://wa.me/923232968158"
+          href="https://wa.me/923040505905"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 p-4 rounded-full shadow-xl z-50 transition"
@@ -142,7 +137,5 @@ const About = () => {
     </>
   );
 };
-
-
 
 export default About;

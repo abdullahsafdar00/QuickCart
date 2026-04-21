@@ -51,7 +51,7 @@ const AllProductsClient = () => {
         grouped.map(([category, prods]) => (
           <div key={category} className="w-full mb-10">
             <h2
-              className="text-xl md:text-3xl font-semibold text-orange-600 mb-14 text-center cursor-pointer hover:underline tracking-tight"
+              className="text-xl md:text-2xl font-semibold text-orange-600 mb-3 cursor-pointer hover:underline tracking-tight"
               onClick={() => {
                 const el = document.getElementById(`cat-${category}`);
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -93,7 +93,7 @@ const AllProductsClient = () => {
         </div>
       )}
       <a
-        href="https://wa.me/923232968158"
+        href="https://wa.me/923040505905"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-6 right-6 p-4 rounded-full shadow-xl z-50 transition"
