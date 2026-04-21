@@ -104,22 +104,18 @@ export default function EditProduct() {
           <label className="block text-sm font-medium mb-2">
             Select Product
           </label>
-          <div className="relative">
-              <select
-      className="w-full appearance-none bg-white p-3 pr-10 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-      value={selectedProductId}
-      onChange={(e) => setSelectedProductId(e.target.value)}
-    >
-      <option value="">Choose a product to edit</option>
-      {myProducts.map((product) => (
-        <option key={product._id} value={product._id}>
-          {product.name}
-        </option>
-      ))}
-    </select>
-    <div div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-    </div>
-        </div>
+          <select
+            className="w-full p-2.5 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            value={selectedProductId}
+            onChange={(e) => setSelectedProductId(e.target.value)}
+          >
+            <option value="">Choose a product to edit</option>
+            {myProducts.map((product) => (
+              <option key={product._id} value={product._id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         {selectedProductId && (
