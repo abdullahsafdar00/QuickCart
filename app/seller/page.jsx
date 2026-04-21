@@ -84,20 +84,14 @@ const AddProduct = () => {
     }
   };
 
- function isAdmin(){
-    if (isLoaded) {
-      const role = user?.publicMetadata?.role;
-      if (role === 'seller') {
-        setIsAuthorized(true);
-      } else {
-        router.replace('/access-denied'); // Optional: create this page
-      }
-    }
- }
-
  useEffect(() => {
-  isAdmin();
- })
+  if (!isLoaded) return;
+  if (user?.publicMetadata?.role === 'seller') {
+    setIsAuthorized(true);
+  } else {
+    router.replace('/access-denied');
+  }
+ }, [isLoaded, user])
  
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">
