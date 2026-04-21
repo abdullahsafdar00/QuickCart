@@ -15,7 +15,7 @@ const Orders = () => {
 
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-      
+      const { isLoaded } = useUser();
       const [isAuthorized, setIsAuthorized] = useState(false);
     
 
@@ -38,19 +38,19 @@ const Orders = () => {
         }
     }
 
-   useEffect(() => {
-
-    if (user) {
-        fetchSellerOrders();
-
-        const role = user?.publicMetadata?.role;
-        if (role === 'seller') {
-            setIsAuthorized(true);
-        } else {
-            router.replace('/access-denied');
+    useEffect(() => {
+        if (user) {
+            fetchSellerOrders();
         }
+        if (isLoaded) {
+      const role = user?.publicMetadata?.role;
+      if (role === 'seller') {
+        setIsAuthorized(true);
+      } else {
+        router.replace('/access-denied'); // Optional: create this page
+      }
     }
-}, [user]);
+    }, [user]);
 
     return (
        <div className="flex-1 min-h-screen flex flex-col justify-between text-sm">
