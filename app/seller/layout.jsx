@@ -1,15 +1,24 @@
-import React from 'react';
-import ProtectedSellerRoute from '@/components/ProtectedSellerRoute';
+import { auth } from '@clerk/nextjs/server';
+import authSeller from '@/lib/authSeller';
+import { redirect } from 'next/navigation';
+import Sidebar from '@/components/seller/Sidebar'; // adjust path
 
-// Seller layout with client-side authentication check to prevent access denied on refresh
-export default function SellerLayout({ children }) {
+export const dynamic = 'force-dynamic';
+
+export default async function SellerLayout({ children }) {
+  const { userId } = await auth();
+
+  if (!userId) redirect('/access-denied');
+
+  const isSeller = await authSeller(userId);
+  if (!isSeller) redirect('/access-denied');
+
   return (
-    <ProtectedSellerRoute>
-      <div>
-        <div className='flex w-full'>
-          {children}
-        </div>
+    <div className="flex w-full">
+      <Sidebar /> {/* ✅ NOW IT WILL SHOW */}
+      <div className="flex-1">
+        {children}
       </div>
-    </ProtectedSellerRoute>
+    </div>
   );
 }
