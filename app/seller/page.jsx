@@ -34,7 +34,6 @@ const AddProduct = () => {
   const [category, setCategory] = useState('Earphone');
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
-  const { isLoaded } = useUser();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [status, setStatus] = useState("")
   const [uploading, setUploading] = useState(false);
