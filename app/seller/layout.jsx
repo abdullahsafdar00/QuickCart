@@ -1,19 +1,15 @@
-import { auth } from '@clerk/nextjs/server';
-import authSeller from '@/lib/authSeller';
-import { redirect } from 'next/navigation';
 import React from 'react';
+import ProtectedSellerRoute from '@/components/ProtectedSellerRoute';
 
-export const dynamic = 'force-dynamic';
-
-export default async function SellerLayout({ children }) {
-  const { userId } = await auth(); // ✅ FIXED
-
-
+// Seller layout with client-side authentication check to prevent access denied on refresh
+export default function SellerLayout({ children }) {
   return (
-    <div>
-      <div className='flex w-full'>
-        {children}
+    <ProtectedSellerRoute>
+      <div>
+        <div className='flex w-full'>
+          {children}
+        </div>
       </div>
-    </div>
+    </ProtectedSellerRoute>
   );
 }
