@@ -2,11 +2,13 @@ import connectDB from "@/config/db";
 import Product from "@/models/product";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import authSeller from '@/lib/authSeller';
 
 export async function PUT(req) {
   try {
     const { userId } = getAuth(req);
-    if (!userId) {
+    const isSeller = await authSeller(userId);
+    if (!userId || !isSeller) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
     const { productId, promotion } = await req.json();
@@ -14,9 +16,9 @@ export async function PUT(req) {
       return NextResponse.json({ success: false, message: "Invalid input" }, { status: 400 });
     }
     await connectDB();
-    const product = await Product.findById(productId);
+    const product = await Product.findOne({ _id: productId, userId });
     if (!product) {
-      return NextResponse.json({ success: false, message: "Product not found" }, { status: 404 });
+      return NextResponse.json({ success: false, message: "Product not found or not owned by you" }, { status: 404 });
     }
     product.promotion = promotion;
     await product.save();

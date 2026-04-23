@@ -8,7 +8,7 @@ import nodemailer from "nodemailer";
 export async function POST(request) {
   try {
     const { userId } = getAuth(request);
-    const { address, items, courierName } = await request.json();
+    const { address, items, courierName, paymentMethod = 'cod' } = await request.json();
 
     if (!address || items.length === 0) {
       return NextResponse.json({ success: false, message: "No items in the order" });
@@ -52,72 +52,40 @@ export async function POST(request) {
       courierMeta = { bookedAt: new Date().toISOString(), courier: courierName };
     }
 
-    // 3️⃣ Fire Inngest event
+    // 3️⃣ Fire Inngest event for persistence + background work (emails, courier booking)
+    const orderData = {
+      userId,
+      address,
+      items,
+      amount: totalAmount,
+      date: Date.now(),
+      courierName,
+      courierTrackingNumber,
+      courierStatus,
+      courierMeta,
+      itemDetails,
+      paymentMethod,
+      paymentStatus: paymentMethod === 'cod' ? 'completed' : 'pending'
+    };
+
     await inngest.send({
       name: 'order/created',
-      data: {
-        userId,
-        address,
-        items,
-        amount: totalAmount,
-        date: Date.now(),
-        courierName,
-        courierTrackingNumber,
-        courierStatus,
-        courierMeta,
-      }
+      data: orderData
     });
 
-    // 4️⃣ Clear cart
+    // 4️⃣ Clear cart quickly
     const user = await User.findById(userId);
     user.cartItems = {};
     await user.save();
 
-    // 4️⃣ Send Emails
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+    // Return immediately — long-running tasks handled by background functions
+    return NextResponse.json({ 
+      success: true, 
+      message: paymentMethod === 'cod' ? "Order Placed. Processing in background" : "Order created. Proceed to payment",
+      orderId: orderData.orderId,
+      courier: { courierName, courierTrackingNumber, courierStatus },
+      paymentMethod
     });
-
-    const itemsHtml = itemDetails.map(
-      (item) => `<li>${item.name} - ${item.quantity} × ${item.price}</li>`
-    ).join("");
-
-    const orderDetailsHtml = `
-      <h2> Order Summary</h2>
-      <p><strong>Email:</strong> ${user.email}</p>
-      <p><strong>Total:</strong> PKR ${totalAmount}</p>
-      <p><strong>Shipping:</strong> ${address}</p>
-      <ul>${itemsHtml}</ul>
-    `;
-
-    // Email to Admin
-    await transporter.sendMail({
-      from: `"HM Electronics Order" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_TO,
-      subject: "📦 New Order Received",
-      html: orderDetailsHtml,
-    });
-
-    // Email to Customer
-    await transporter.sendMail({
-      from: `"HM Electronics" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: "✅ Your Order Confirmation",
-      text: 'Order summary for your purchase from HM Electronics...',
-      html: `
-        <h2>Thank you for your order!</h2>
-        <p>Your order has been placed successfully.</p>
-        ${orderDetailsHtml}
-        <p>We’ll ship your items soon!</p>
-      `,
-    });
-
-    // ✅ Final response after email
-    return NextResponse.json({ success: true, message: "Order Placed & Emails Sent", courier: { courierName, courierTrackingNumber, courierStatus } });
 
   } catch (error) {
     console.error("❌ Order Error:", error);
