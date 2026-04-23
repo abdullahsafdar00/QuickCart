@@ -19,7 +19,7 @@ export async function POST(request) {
         const isSeller = await authSeller(userId);
 
         if (!isSeller) {
-            return NextResponse.json({success: false, message: "Not authorized"}, { status: 401 })
+            return NextResponse.json({success: false, message: "not authorized"}, {status: 401})
         }
 
         // Accept JSON body with image URLs
@@ -29,15 +29,13 @@ export async function POST(request) {
         if (!image || !Array.isArray(image) || image.length === 0) {
             return NextResponse.json({success: false, message: "No image URLs provided"});
         }
-        // Optionally: validate URLs are Cloudinary links
         if (!image.every(url => typeof url === 'string' && url.startsWith('http'))) {
             return NextResponse.json({success: false, message: "Invalid image URLs"});
         }
 
         await connectDB();
-    const realUserId = typeof userId === 'string' ? userId : userId?.userId;
         const newProduct = await Product.create({
-            userId: realUserId,
+            userId,
             name,
             description,
             category,

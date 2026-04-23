@@ -78,7 +78,11 @@ export const createUserOrder = inngest.createFunction(
                 items: event.data.items,
                 amount: event.data.amount,
                 address: event.data.address,
-                date: event.data.date
+                date: event.data.date,
+                courierName: event.data.courierName,
+                courierTrackingNumber: event.data.courierTrackingNumber,
+                courierStatus: event.data.courierStatus,
+                courierMeta: event.data.courierMeta,
             }
         })
         await connectDB();

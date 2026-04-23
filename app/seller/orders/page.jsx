@@ -47,10 +47,10 @@ const Orders = () => {
       if (role === 'seller') {
         setIsAuthorized(true);
       } else {
-        router.replace('/access-denied'); // Optional: create this page
+        router.replace('/access-denied');
       }
     }
-    }, [user]);
+    }, [user, isLoaded]);
 
     return (
        <div className="flex-1 min-h-screen flex flex-col justify-between text-sm">
@@ -107,9 +107,9 @@ const Orders = () => {
 
             {/* Meta Info */}
             <div className="text-gray-600 text-sm w-full sm:w-1/4">
-              <p>Method: COD</p>
+              <p>Method: {order.paymentMethod?.toUpperCase() || 'COD'}</p>
               <p>Date: {new Date(order.date).toLocaleDateString()}</p>
-              <p>Payment: Pending</p>
+              <p>Payment: {order.paymentStatus || 'Pending'}</p>
             </div>
           </div>
         ))}

@@ -129,7 +129,7 @@ const ProductList = () => {
         router.replace('/access-denied');
       }
     }
-  }, [user]);
+  }, [user, isLoaded]);
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">

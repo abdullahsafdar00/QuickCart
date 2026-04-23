@@ -197,9 +197,9 @@ async function uploadToCloudinary(file) {
     }
   };
 
-  if (!user) {
-    router.push('/access-denied')
-  }
+  useEffect(() => {
+    if (user === null) router.push('/access-denied');
+  }, [user]);
 
   return (
     <div className="flex-1 min-h-screen flex flex-col justify-between">

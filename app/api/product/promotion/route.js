@@ -2,13 +2,11 @@ import connectDB from "@/config/db";
 import Product from "@/models/product";
 import { getAuth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import authSeller from '@/lib/authSeller';
 
 export async function PUT(req) {
   try {
     const { userId } = getAuth(req);
-    const isSeller = await authSeller(userId);
-    if (!userId || !isSeller) {
+    if (!userId) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
     const { productId, promotion } = await req.json();

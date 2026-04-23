@@ -223,7 +223,7 @@ const AddProduct = () => {
         </button>
       </form>
          {status === "success" && (
-        <p className="text-green-600 pt-2">Thank you for subscribing!</p>
+        <p className="text-green-600 pt-2">Product added successfully!</p>
 
       )}
       {/* <Footer /> */}

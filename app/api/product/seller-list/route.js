@@ -10,12 +10,12 @@ export async function GET(request) {
         const isSeller = await authSeller(userId);
 
         if(!isSeller) {
-            return NextResponse.json({success: false, message: "Not authorized"}, { status: 401 })
+            return NextResponse.json({success: false, message: "not authorized"}, {status: 401})
         }
 
         await connectDB();
 
-        const products = await Product.find({})
+        const products = await Product.find({ userId })
         return NextResponse.json({success: true, products})
     } catch (error) {
         return NextResponse.json({success: false, message: error.message})

@@ -23,7 +23,7 @@ export const AppContextProvider = (props) => {
 
     const [products, setProducts] = useState([])
     const [userData, setUserData] = useState(false)
-    const [isSeller, setIsSeller] = useState(true)
+    const [isSeller, setIsSeller] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
     const fetchProductData = async () => {
@@ -120,6 +120,7 @@ export const AppContextProvider = (props) => {
         let totalAmount = 0;
         for (const items in cartItems) {
             let itemInfo = products.find((product) => product._id === items);
+            if (!itemInfo) continue;
             if (cartItems[items] > 0) {
                 if (itemInfo.offerPrice) {
                 totalAmount += itemInfo.offerPrice * cartItems[items];
